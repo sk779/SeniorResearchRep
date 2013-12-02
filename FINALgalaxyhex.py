@@ -10,8 +10,8 @@ import pandas
 
 ###############
 
-size=100 #in Megaparsecs
-npts=10 # number of points
+size=50 #in Megaparsecs
+npts=500 # number of points
 # File
 readdata = np.genfromtxt('/Users/shibikannan/Desktop/SeniorResearch/galaxyhex.csv', delimiter = ',')
 
