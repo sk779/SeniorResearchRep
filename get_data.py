@@ -11,6 +11,10 @@ def getFile(in_file):
 	ftp.close()
 	ssh.close()
 
+def getBox(x,y,z,scale):
+	box = (int(x)/scale)*(1000/scale)**2+(int(y)/scale)*(1000/scale)+(int(z)/scale)
+	return(box)
+
 def getCoords(in_file, out_file):
 	reader = csv.reader(open(in_file))
 	# writer = csv.writer(open(out_file,'w'))
@@ -23,7 +27,7 @@ def getCoords(in_file, out_file):
 				x = float(row[4])
 				y = float(row[5])
 				z = float(row[6])
-				box = (int(x)/scale)*(1000/scale)**2+(int(y)/scale)*(1000/scale)+(int(z)/scale)
+				box = getBox(x,y,z,scale)
 				# writer.writerow([np.random.uniform(),x,y,z,box,'\n'])
 				gals[rn] = np.array([np.random.uniform(),x,y,z,box])
 				rn = rn+1
