@@ -14,7 +14,7 @@ def dist(pi,pj):
 		dk[k-1] = d
 	return np.sqrt(sum(dk**2))
 
-def getDists(ngal):
+def getDists(gals,ngal):
 	k=0
 	nboxes = (1000/scale)**3
 	if ngal==0: ngal=gals.shape[0]
@@ -35,38 +35,48 @@ def getDists(ngal):
 	dists = np.trim_zeros(np.sort(np.trim_zeros(dists)))
 	return dists
 
-def calcRR(r1,r2):
-	univ_vol = 1000**3
-	shell_vol = (4./3.)*(np.pi)*(r2**3 - r1**3)
-	return (npts**2)*shell_vol/univ_vol
+# def calcRR(r1,r2):
+# 	univ_vol = 1000**3
+# 	shell_vol = (4./3.)*(np.pi)*(r2**3 - r1**3)
+# 	return (npts**2)*shell_vol/univ_vol
 
-def calcTPCF(n):
+def calcTPCF(dn,rn):
 	centers = np.zeros((nbins-1))
 	tpcf = np.zeros((nbins-1))
 	for i in range(0,nbins-1):
 		r1 = bins[i]
 		r2 = bins[i+1]
 		centers[i] = (r1+r2)/2.
-		RR = calcRR(r1,r2)
-		DD = n[i]
-		tpcf[i] = DD/RR - 1
+		# RR = calcRR(r1,r2)
+		DD = dn[i]
+		RR = rn[i]
+		try:
+			tpcf[i] = np.float(DD)/RR - 1
+		except ZeroDivisionError:
+			tpcf[i] = 0
 	return centers, tpcf
 
-in_file = 'gal_locs.npy'
-gals = np.load(in_file)
-npts = 30000
+npts = 1000
 scale = 100
 
-dists = getDists(npts)
-out_file = 'dists_pruned_30k.npy'
-np.save(out_file, dists)
+dfile = '../data/gal_locs.npy'
+dgals = np.load(dfile)
+ddists = getDists(dgals,npts)
+out_file = '../data/dists_pruned_30k.npy'
+np.save(out_file, ddists)
+
+rfile = '../data/rand_gals.npy'
+rgals = np.load(rfile)
+rdists = getDists(rgals,npts)
+out_file = '../data/rand_dists_pruned_30k.npy'
+np.save(out_file, rdists)
 
 nbins = 75
 bins = np.logspace(np.log10(0.001),np.log10(150),nbins)
-n1, bins = np.histogram(dists1, bins)
-n2, bins = np.histogram(dists2, bins)
-centers, tpcf1 = calcTPCF(n1)
-centers, tpcf2 = calcTPCF(n2)
+dn, bins = np.histogram(ddists, bins)
+rn, bins = np.histogram(rdists, bins)
+centers, tpcf1 = calcTPCF(dn,rn)
+# centers, tpcf2 = calcTPCF(n2)
 
 
 line1, = py.plot(centers,tpcf1,'bo')

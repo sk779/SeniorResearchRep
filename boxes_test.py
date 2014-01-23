@@ -58,7 +58,7 @@ def isValidBox(b1,b2):
 	else:
 		return False
 
-gals = np.load('gal_locs.npy')
+gals = np.load('../data/gal_locs.npy')
 scale = 200
 npts = 2000#gals.shape[0]
 boxes = np.zeros(npts)

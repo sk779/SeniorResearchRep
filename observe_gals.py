@@ -7,7 +7,7 @@ import matplotlib.patches as mpatches
 hex_size=8 #in Megaparsecs
 npts=30000 # number of points
 
-in_file = 'gal_locs.npy'
+in_file = '../data/gal_locs.npy'
 gals = np.load(in_file)
 gals = gals[0:npts]
 
@@ -32,7 +32,7 @@ for i in range(npts):
         dict[(q,r)] = [(x,y)]
 
 pruned_gals = gals[valid==np.ones(npts)]
-out_file = 'gal_locs_pruned_' + str(npts/1000) + 'k.npy'
+out_file = '../data/gal_locs_pruned_' + str(npts/1000) + 'k.npy'
 np.save(out_file, pruned_gals)
 
 
