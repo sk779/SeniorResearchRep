@@ -56,20 +56,16 @@ def calcTPCF(dn,rn):
 			tpcf[i] = 0
 	return centers, tpcf
 
-npts = 1000
+npts = 5000
 scale = 100
 
 dfile = '../data/gal_locs.npy'
 dgals = np.load(dfile)
 ddists = getDists(dgals,npts)
-out_file = '../data/dists_pruned_30k.npy'
-np.save(out_file, ddists)
 
 rfile = '../data/rand_gals.npy'
 rgals = np.load(rfile)
 rdists = getDists(rgals,npts)
-out_file = '../data/rand_dists_pruned_30k.npy'
-np.save(out_file, rdists)
 
 nbins = 75
 bins = np.logspace(np.log10(0.001),np.log10(150),nbins)
@@ -78,11 +74,15 @@ rn, bins = np.histogram(rdists, bins)
 centers, tpcf1 = calcTPCF(dn,rn)
 # centers, tpcf2 = calcTPCF(n2)
 
+out_file = '../data/dists_pruned_30k.npy'
+np.save(out_file, dn)
+out_file = '../data/rand_dists_pruned_30k.npy'
+np.save(out_file, rn)
 
 line1, = py.plot(centers,tpcf1,'bo')
 line1l = py.plot(centers,tpcf1,'k')
-line2, = py.plot(centers,tpcf2,'ro')
-line2l = py.plot(centers,tpcf2,'k')
+# line2, = py.plot(centers,tpcf2,'ro')
+# line2l = py.plot(centers,tpcf2,'k')
 py.gca().set_xlabel('Distance Between Galaxies')
 py.gca().set_ylabel(r'$\xi(r)$')
 py.legend( (line1,line2), ('Simulated Data','\"Observed\" Data'), loc=6, numpoints=1 )
@@ -93,8 +93,8 @@ py.show()
 
 line1, = py.plot(centers,tpcf1*centers**2,'bo')
 line1l = py.plot(centers,tpcf1*centers**2,'k')
-line2, = py.plot(centers,tpcf2*centers**2,'ro')
-line2l = py.plot(centers,tpcf2*centers**2,'k')
+# line2, = py.plot(centers,tpcf2*centers**2,'ro')
+# line2l = py.plot(centers,tpcf2*centers**2,'k')
 py.gca().set_xlabel('Distance Between Galaxies')
 py.gca().set_ylabel(r'$r^2 \xi(r)$')
 py.legend( (line1,line2), ('Simulated Data','\"Observed\" Data'), loc=6, numpoints=1 )
