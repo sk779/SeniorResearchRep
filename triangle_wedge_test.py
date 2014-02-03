@@ -1,3 +1,5 @@
+# FOR REGULAR HEXAGON CENTERED AT (35,35) WITH "RADIUS" 20
+
 # LIBRARIES
 
 import random
@@ -15,27 +17,50 @@ from matplotlib.patches import Polygon
 # HEXAGON GRID SETUP
 # Note that we are restricted to the 1st quadrant
 
-# Input parameters
-size=1 #in Megaparsecs
-inpt=70
-#npts=7 # number of points
-#readdata = np.genfromtxt('/Users/shibikannan/Desktop/SeniorResearch/galaxyhex.csv', delimiter = ',')
 counter = 0
-
+counter2 = 0
 fig, ax = plt.subplots()
 patches = []
 n=100
-bound=inpt
 hexes=[]
+
+def crt2ax(x,y,size):
+    q,r = approxAx(x, y, size)
+    x,y,z = ax2cb(q,r)
+    x,y,z = hexRound(x,y,z)
+    return cb2ax(x,y,z)
+
+#npts=7 # number of points
+#readdata = np.genfromtxt('/Users/shibikannan/Desktop/SeniorResearch/galaxyhex.csv', delimiter = ',')
+
+# Input parameters
+size=1 #in Megaparsecs
+bound=60 # 0 to what in (x,y)
+x = 35
+y = 30
+
+
+q_xy,r_xy = crt2ax(x,y,size)
+
 for r in range(-n,n):
 	for q in range(-n,n):
             hex_center = drawConvert(q,r,size)
-            #if (abs(hex_center[0])<bound+size and abs(hex_center[1])<bound+size and hex_center[0]>=0 and hex_center[1]>=0):
-            if (hex_center[1]<=95.62-1.732*hex_center[0] and hex_center[1] >= 17.68 and hex_center[1]<=1.732*hex_center[0]-25.62):
-                hexes.append([q,r])
-                polygon = mpatches.RegularPolygon(hex_center, 6, size, fill='blue')
-                patches.append(polygon)
-                counter += 1
+            if (abs(hex_center[0])<bound+size and abs(hex_center[1])<bound+size and hex_center[0]>=0 and hex_center[1]>=0):
+                if (q_xy == q and r_xy == r):
+                    hexes.append([q,r])
+                    polygon_xy = mpatches.RegularPolygon(hex_center, 6, size, color='green', ec='black')
+                    patches.append(polygon_xy)
+                elif (hex_center[1]<=95.62-1.732*hex_center[0] and hex_center[1] >= 17.68 and hex_center[1]<=1.732*hex_center[0]-25.62):
+                    hexes.append([q,r])
+                    polygon = mpatches.RegularPolygon(hex_center, 6, size, color='blue', ec='black')
+                    patches.append(polygon)
+                    counter += 1
+                else:
+                    hexes.append([q,r])
+                    polygon2 = mpatches.RegularPolygon(hex_center, 6, size, color='none', ec='black')
+                    patches.append(polygon2)
+                    counter2 += 1
+
                 
 pts1 = np.array([[35,35],[25,17.68],[45,17.68]])
 pts2 = np.array([[35,35],[55,35],[45,17.68]])
@@ -60,11 +85,6 @@ patches.append(p6)
 
 plt.axes().set_aspect('equal', 'datalim')
 
-#def crt2ax(x,y,s):
-#    q,r = approxAx(x, y, s)
-#    x,y,z = ax2cb(q,r)
-#    x,y,z = hexRound(x,y,z)
-#    return cb2ax(x,y,z)
 #
 ## Reading CSV
 #k = [] # x in file
@@ -93,12 +113,13 @@ plt.axes().set_aspect('equal', 'datalim')
     
 collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3, match_original=True)
 ax.add_collection(collection)
-plt.axis([0,inpt,0,inpt])
-#lines = plt.plot(10, 10, 50, 50)
-#plt.setp(lines, color='r', linewidth=2.0)
+plt.axis([-10,bound+5,-10,bound+5])
 plt.show()
 
-print counter
+print 'hex in wedge ',counter
+print 'hex not in wedge ',counter2
+print '(x,y) = ',x,y
+print '(q,r) = ',q_xy,r_xy
 
 #n_gal= 5
 #for i in range(len(hexes)):
