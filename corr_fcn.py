@@ -77,7 +77,7 @@ nbins = 75
 bins = np.logspace(np.log10(0.001),np.log10(150),nbins)
 dn, bins = np.histogram(ddists, bins, weights=dweights)
 rn, bins = np.histogram(rdists, bins)
-centers, tpcf1 = calcTPCF(dn,rn)
+centers, tpcfd = calcTPCF(dn,rn)
 # centers, tpcf2 = calcTPCF(n2)
 
 out_file = '../data/dists_observed_30k.npy'
@@ -85,13 +85,20 @@ np.save(out_file, dn)
 out_file = '../data/rand_dists_observed_30k.npy'
 np.save(out_file, rn)
 
-line1, = py.plot(centers,tpcf1,'bo')
-line1l = py.plot(centers,tpcf1,'k')
+line1, = py.plot(centers,tpcfd,'bo')
+line1l = py.plot(centers,tpcfd,'k')
 # line2, = py.plot(centers,tpcf2,'ro')
 # line2l = py.plot(centers,tpcf2,'k')
+
+line1, = py.plot(centers,tpcfd,'bo')
+line1l = py.plot(centers,tpcfd,'k')
+line2, = py.plot(centers,tpcfo,'ro')
+line2l, = py.plot(centers,tpcfo,'k')
+line3, = py.plot(centers,tpcfow,'go')
+line3l, = py.plot(centers,tpcfow,'k')
 py.gca().set_xlabel('Distance Between Galaxies')
 py.gca().set_ylabel(r'$\xi(r)$')
-py.legend( (line1,line2), ('Simulated Data','\"Observed\" Data'), loc=6, numpoints=1 )
+py.legend( (line1,line2,line3), ('Simulated Data','\"Observed\" Data', 'Observed with Weighting'), loc=1, numpoints=1 )
 py.text(.0015,.0015,'npts = '+str(npts)+'\nhex_size = 8',bbox=dict(facecolor='none',alpha=1))
 py.yscale('log'); py.xscale('log')
 py.show()
