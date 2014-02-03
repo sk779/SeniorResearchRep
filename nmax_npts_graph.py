@@ -13,8 +13,8 @@ import pandas
 #size_array = [100,95,90,85,80,75,70,65,60,55,50,45,40,35,30,25,20,10,8,6,5,4,3,2,1]
 #nmax_array = [1,3,5,7,9,11,13]
 #npts_array = [50000,100000,150000,200000]
-nmax_array = [5]
-npts_array = [50000]
+nmax_array = [1,3,5,7,9,11,13]
+npts_array = [50000,100000,150000,200000]
 
 color_array = ['b','g','r','m']
 gal_array = []
