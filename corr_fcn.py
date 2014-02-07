@@ -22,7 +22,7 @@ def getDists(gals,ngal):
 	weights = np.zeros((ngal*ngal)/10.)
 	g = gals[0:ngal]
 	for i in range(nboxes):
-		if i%250==0: print i
+		if i%100==0: print i
 		for j in range(nboxes):
 			if isValidBox(i,j):
 				pointsi = g[g[:,4]==i,:]
@@ -30,7 +30,7 @@ def getDists(gals,ngal):
 				for pi in pointsi:
 					for pj in pointsj:
 						d = dist(pi,pj)
-						w = np.mean( [pi[5], pj[5]] )
+						w = pi[5] * pj[5]
 						if d<=150:
 							dists[k] 	= d
 							weights[k] 	= w
@@ -80,10 +80,18 @@ rn, bins = np.histogram(rdists, bins)
 centers, tpcfd = calcTPCF(dn,rn)
 # centers, tpcf2 = calcTPCF(n2)
 
-out_file = '../data/dists_observed_30k.npy'
-np.save(out_file, dn)
-out_file = '../data/rand_dists_observed_30k.npy'
-np.save(out_file, rn)
+dat=np.array([tpcfo,tpcfow])
+file='data/dist_hist_obs_30k.npy'
+np.save(outfile,dat)
+
+dat 	= np.load(file)
+tpcfo 	= dat[0]
+tpcfow	= dat[1]
+
+# out_file = '../data/dists_observed_30k.npy'
+# np.save(out_file, dn)
+# out_file = '../data/rand_dists_observed_30k.npy'
+# np.save(out_file, rn)
 
 line1, = py.plot(centers,tpcfd,'bo')
 line1l = py.plot(centers,tpcfd,'k')
@@ -103,6 +111,16 @@ py.text(.0015,.0015,'npts = '+str(npts)+'\nhex_size = 8',bbox=dict(facecolor='no
 py.yscale('log'); py.xscale('log')
 py.show()
 
+line1, = py.plot(centers,tpcfd,'bo')
+line1l = py.plot(centers,tpcfd,'k')
+line3, = py.plot(centers,tpcfow,'go')
+line3l, = py.plot(centers,tpcfow,'k')
+py.gca().set_xlabel('Distance Between Galaxies')
+py.gca().set_ylabel(r'$\xi(r)$')
+py.legend( (line1,line2,line3), ('Simulated Data','\"Observed\" Data', 'Observed with Weighting'), loc=1, numpoints=1 )
+py.text(.0015,.0015,'npts = '+str(npts)+'\nhex_size = 8',bbox=dict(facecolor='none',alpha=1))
+py.xscale('log')
+py.show()
 
 line1, = py.plot(centers,tpcf1*centers**2,'bo')
 line1l = py.plot(centers,tpcf1*centers**2,'k')

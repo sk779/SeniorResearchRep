@@ -3,13 +3,13 @@ import csv
 import paramiko as pm
 
 def getFile(in_file):
-	ssh = pm.SSHClient()
-	ssh.set_missing_host_key_policy(pm.AutoAddPolicy())
-	ssh.connect('turtle.astro.yale.edu',username='bzg2',password='------')
-	ftp = ssh.open_sftp()
-	ftp.get(in_file, in_file) 
-	ftp.close()
-	ssh.close()
+ssh = pm.SSHClient()
+ssh.set_missing_host_key_policy(pm.AutoAddPolicy())
+ssh.connect('turtle.astro.yale.edu',username='bzg2',password='------')
+ftp = ssh.open_sftp()
+ftp.get(in_file, in_file) 
+ftp.close()
+ssh.close()
 
 def getBox(x,y,z,scale):
 	box = (int(x)/scale)*(1000/scale)**2+(int(y)/scale)*(1000/scale)+(int(z)/scale)
