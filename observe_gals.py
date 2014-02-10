@@ -6,7 +6,7 @@ import matplotlib.patches as mpatches
 
 hex_size=8 # in Megaparsecs
 nmax = 5 # max gals per hex/fiber
-npts=30000 # number of points
+npts=40000 # number of points
 
 in_file = '../data/gal_locs.npy'
 gals = np.load(in_file)
@@ -44,4 +44,3 @@ gals = np.insert(gals,5,gal_weights,1) # add gal weights as sixth column
 observed_gals = gals[valid==np.ones(npts)]
 out_file = '../data/gal_locs_observed_' + str(npts/1000) + 'k.npy'
 np.save(out_file, observed_gals)
-
