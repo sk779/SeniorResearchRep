@@ -22,7 +22,12 @@ counter2 = 0
 fig, ax = plt.subplots()
 patches = []
 hexes=[]
+tri_hexes=[]
 pts_list=[]
+slope_right=[]
+slope_bottom=[]
+slope_left=[]
+color_list=['blue','green','red','cyan','magenta','yellow']
 
 def crt2ax(x,y,size):
     q,r = approxAx(x, y, size)
@@ -35,6 +40,7 @@ def crt2ax(x,y,size):
 
 # Input parameters
 
+bound = input('bound: ')
 x = input('x: ')
 y = input('y: ')
 radius = input('radius: ')
@@ -43,8 +49,7 @@ test_x = x
 test_y = y-5
 
 size=1 #in Megaparsecs
-bound=200 # 0 to what in (x,y)
-n=250
+n= 2*bound
 
 for k in range(0,6):
     pts_list.append([(x + radius*math.cos((2*math.pi*(k+1))/6)),(y + radius*math.sin((2*math.pi*(k+1))/6))])
@@ -59,33 +64,105 @@ for a in range(0,6):
         
 print pts_list
 
-slope_right = (pts_list[4][1]-y)/(pts_list[4][0]-x)
-slope_left = (pts_list[3][1]-y)/(pts_list[3][0]-x)
-lower_bound = pts_list[3][1]
+#for index in range(0,6):
+#    if (index == 5):    
+#        slope_right.append((pts_list[index][1]-y)/(pts_list[0][0]-x))
+#        slope_left.append((pts_list[0][1]-y)/(pts_list[index][0]-x))
+#        slope_bottom.append((pts_list[0][1]-pts_list[index][1])/(pts_list[0][0]-pts_list[index][0]))
+#    else:
+#        slope_right.append((pts_list[index][1]-y)/(pts_list[index+1][0]-x))
+#        slope_left.append((pts_list[index+1][1]-y)/(pts_list[index][0]-x))
+#        slope_bottom.append((pts_list[index+1][1]-pts_list[index][1])/(pts_list[index+1][0]-pts_list[index][0]))
         
+for index in range(0,6):
+    slope_right.append((pts_list[index][1]-y)/(pts_list[index][0]-x))
+    slope_left.append((pts_list[index-1][1]-y)/(pts_list[index-1][0]-x))
+    slope_bottom.append((pts_list[index][1]-pts_list[index-1][1])/(pts_list[index][0]-pts_list[index-1][0]))
+
 q_xy,r_xy = crt2ax(test_x,test_y,size)
 
 for r in range(-n,n):
 	for q in range(-n,n):
             hex_center = drawConvert(q,r,size)
             if (abs(hex_center[0])<bound+size and abs(hex_center[1])<bound+size and hex_center[0]>=0 and hex_center[1]>=0):
-                if (q_xy == q and r_xy == r):
-                    hexes.append([q,r])
-                    polygon_xy = mpatches.RegularPolygon(hex_center, 6, size, color='green', ec='black')
-                    patches.append(polygon_xy)
-                elif (hex_center[1]<=slope_left*(hex_center[0]-x)+y and
-                        hex_center[1]>=lower_bound and
-                        hex_center[1]<=slope_right*(hex_center[0]-x)+y):
-                    hexes.append([q,r])
-                    polygon = mpatches.RegularPolygon(hex_center, 6, size, color='blue', ec='black')
-                    patches.append(polygon)
-                    counter += 1
+                if (
+                        hex_center[1]>=slope_left[0]*(hex_center[0]-x)+y and
+                        hex_center[1]<=slope_bottom[0]*(hex_center[0]-pts_list[0][0])+pts_list[0][1] and
+                        hex_center[1]>=slope_right[0]*(hex_center[0]-x)+y
+                    ):
+                        hexes.append([q,r])
+                        polygon = mpatches.RegularPolygon(hex_center, 6, size, color='red', ec='black')
+                        patches.append(polygon)
+                        counter += 1
+                        tri_hexes.append([q,r])
+                elif (
+                        hex_center[1]<=slope_left[1]*(hex_center[0]-x)+y and
+                        hex_center[1]<=slope_bottom[1]*(hex_center[0]-pts_list[1][0])+pts_list[1][1] and
+                        hex_center[1]>=slope_right[1]*(hex_center[0]-x)+y
+                    ):
+                        hexes.append([q,r])
+                        polygon = mpatches.RegularPolygon(hex_center, 6, size, color='blue', ec='black')
+                        patches.append(polygon)
+                        counter += 1
+                        tri_hexes.append([q,r])
+                elif (
+                        hex_center[1]<=slope_left[2]*(hex_center[0]-x)+y and
+                        hex_center[1]>=slope_bottom[2]*(hex_center[0]-pts_list[2][0])+pts_list[2][1] and
+                        hex_center[1]>=slope_right[2]*(hex_center[0]-x)+y
+                    ):
+                        hexes.append([q,r])
+                        polygon = mpatches.RegularPolygon(hex_center, 6, size, color='green', ec='black')
+                        patches.append(polygon)
+                        counter += 1
+                        tri_hexes.append([q,r])
+                elif (
+                        hex_center[1]<=slope_left[3]*(hex_center[0]-x)+y and
+                        hex_center[1]>=slope_bottom[3]*(hex_center[0]-pts_list[3][0])+pts_list[3][1] and
+                        hex_center[1]<=slope_right[3]*(hex_center[0]-x)+y
+                    ):
+                        hexes.append([q,r])
+                        polygon = mpatches.RegularPolygon(hex_center, 6, size, color='cyan', ec='black')
+                        patches.append(polygon)
+                        counter += 1
+                        tri_hexes.append([q,r])
+                elif (
+                        hex_center[1]>=slope_left[4]*(hex_center[0]-x)+y and
+                        hex_center[1]>=slope_bottom[4]*(hex_center[0]-pts_list[4][0])+pts_list[4][1] and
+                        hex_center[1]<=slope_right[4]*(hex_center[0]-x)+y
+                    ):
+                        hexes.append([q,r])
+                        polygon = mpatches.RegularPolygon(hex_center, 6, size, color='magenta', ec='black')
+                        patches.append(polygon)
+                        counter += 1
+                        tri_hexes.append([q,r])
+                elif (
+                        hex_center[1]>=slope_left[5]*(hex_center[0]-x)+y and
+                        hex_center[1]<=slope_bottom[5]*(hex_center[0]-pts_list[5][0])+pts_list[5][1] and
+                        hex_center[1]<=slope_right[5]*(hex_center[0]-x)+y
+                    ):
+                        hexes.append([q,r])
+                        polygon = mpatches.RegularPolygon(hex_center, 6, size, color='yellow', ec='black')
+                        patches.append(polygon)
+                        counter += 1
+                        tri_hexes.append([q,r])                        
+                elif (q_xy == q and r_xy == r):
+                        hexes.append([q,r])
+                        polygon_xy = mpatches.RegularPolygon(hex_center, 6, size, color='black', ec='black')
+                        patches.append(polygon_xy)
                 else:
-                    hexes.append([q,r])
-                    polygon2 = mpatches.RegularPolygon(hex_center, 6, size, color='none', ec='black')
-                    patches.append(polygon2)
-                    counter2 += 1
-                
+                        hexes.append([q,r])
+                        polygon2 = mpatches.RegularPolygon(hex_center, 6, size, color='none', ec='black')
+                        patches.append(polygon2)
+                        counter2 += 1 
+
+#tri_hexes.reverse()
+#new_index = tri_hexes
+#
+#loc_x,loc_y = crt2ax(x,y-9,size)
+#output = [new_index.index([loc_x,loc_y])+1,[x,y-9]]
+#print output
+                     
+       
 plt.axes().set_aspect('equal', 'datalim')
     
 collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3, match_original=True)
