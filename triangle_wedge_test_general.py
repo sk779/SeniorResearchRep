@@ -21,9 +21,8 @@ counter = 0
 counter2 = 0
 fig, ax = plt.subplots()
 patches = []
-
-n=100
 hexes=[]
+pts_list=[]
 
 def crt2ax(x,y,size):
     q,r = approxAx(x, y, size)
@@ -35,13 +34,36 @@ def crt2ax(x,y,size):
 #readdata = np.genfromtxt('/Users/shibikannan/Desktop/SeniorResearch/galaxyhex.csv', delimiter = ',')
 
 # Input parameters
+
+x = input('x: ')
+y = input('y: ')
+radius = input('radius: ')
+
+test_x = x
+test_y = y-5
+
 size=1 #in Megaparsecs
-bound=60 # 0 to what in (x,y)
-x = 35
-y = 30
+bound=200 # 0 to what in (x,y)
+n=250
 
+for k in range(0,6):
+    pts_list.append([(x + radius*math.cos((2*math.pi*(k+1))/6)),(y + radius*math.sin((2*math.pi*(k+1))/6))])
 
-q_xy,r_xy = crt2ax(x,y,size)
+for a in range(0,6):
+    if (a == 5):
+        pts = np.array([[x,y],pts_list[5],pts_list[0]])
+        patches.append(Polygon(pts, closed=True,facecolor='none',linewidth=3))
+    else:
+        pts = np.array([[x,y],pts_list[a],pts_list[a+1]])
+        patches.append(Polygon(pts, closed=True,facecolor='none',linewidth=3))
+        
+print pts_list
+
+slope_right = (pts_list[4][1]-y)/(pts_list[4][0]-x)
+slope_left = (pts_list[3][1]-y)/(pts_list[3][0]-x)
+lower_bound = pts_list[3][1]
+        
+q_xy,r_xy = crt2ax(test_x,test_y,size)
 
 for r in range(-n,n):
 	for q in range(-n,n):
@@ -51,7 +73,9 @@ for r in range(-n,n):
                     hexes.append([q,r])
                     polygon_xy = mpatches.RegularPolygon(hex_center, 6, size, color='green', ec='black')
                     patches.append(polygon_xy)
-                elif (hex_center[1]<=95.62-1.732*hex_center[0] and hex_center[1] >= 17.68 and hex_center[1]<=1.732*hex_center[0]-25.62):
+                elif (hex_center[1]<=slope_left*(hex_center[0]-x)+y and
+                        hex_center[1]>=lower_bound and
+                        hex_center[1]<=slope_right*(hex_center[0]-x)+y):
                     hexes.append([q,r])
                     polygon = mpatches.RegularPolygon(hex_center, 6, size, color='blue', ec='black')
                     patches.append(polygon)
@@ -61,56 +85,8 @@ for r in range(-n,n):
                     polygon2 = mpatches.RegularPolygon(hex_center, 6, size, color='none', ec='black')
                     patches.append(polygon2)
                     counter2 += 1
-
                 
-pts1 = np.array([[35,35],[25,17.68],[45,17.68]])
-pts2 = np.array([[35,35],[55,35],[45,17.68]])
-pts3 = np.array([[35,35],[55,35],[45,52.32]])
-pts4 = np.array([[35,35],[45,52.32],[25,52.32]])
-pts5 = np.array([[35,35],[25,52.32],[15,35]])
-pts6 = np.array([[35,35],[25,17.68],[15,35]])
-
-p1 = Polygon(pts1, closed=True,facecolor='none',linewidth=3)
-p2 = Polygon(pts2, closed=True,facecolor='none',linewidth=3)
-p3 = Polygon(pts3, closed=True,facecolor='none',linewidth=3)
-p4 = Polygon(pts4, closed=True,facecolor='none',linewidth=3)
-p5 = Polygon(pts5, closed=True,facecolor='none',linewidth=3)
-p6 = Polygon(pts6, closed=True,facecolor='none',linewidth=3)
-
-patches.append(p1)
-patches.append(p2)
-patches.append(p3)
-patches.append(p4)
-patches.append(p5)
-patches.append(p6)
-
 plt.axes().set_aspect('equal', 'datalim')
-
-#
-## Reading CSV
-#k = [] # x in file
-#l = [] # y in file
-#
-#color=['go']*npts
-##hexes = [0]*npts
-#hex_counts = [0]*(len(hexes)+1)
-#
-#for i in range(1,npts):
-#    k.append(readdata[i][4])
-#    l.append(readdata[i][5])
-#    
-#
-#for i in range(1,npts-1):
-#    x = k[i]
-#    y = l[i]
-#    q,r = crt2ax(x,y,size)
-#    #hexes[i] = [q,r]
-#    try:
-#        index = hexes.index([q,r])
-#    except:
-#        index = len(hexes)
-#    hex_counts[index] += 1
-#    plt.plot(x,y,color[i])
     
 collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3, match_original=True)
 ax.add_collection(collection)
