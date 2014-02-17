@@ -44,3 +44,7 @@ gals = np.insert(gals,5,gal_weights,1) # add gal weights as sixth column
 observed_gals = gals[valid==np.ones(npts)]
 out_file = '../data/gal_locs_observed_' + str(npts/1000) + 'k.npy'
 np.save(out_file, observed_gals)
+
+cols = np.array([1,2,3,5])
+gals = gals[:,cols]
+np.savetxt('data/rand_gals.txt',gals,delimiter=' ')
