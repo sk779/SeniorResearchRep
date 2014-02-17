@@ -42,15 +42,14 @@ radius = input('radius: ')
 x_prime_input = input('x prime: ')
 y_prime_input = input('y prime: ')
 
+n= 2*bound
+
 #bound = 50
 #x = 20
 #y = 20
 #radius = 10
-#x_prime_input = 30
-#y_prime_input = 30
-
-n= 2*bound
-
+#test_x = x
+#test_y = y-5
 
 # Determine hexagon vertices
 
@@ -68,11 +67,11 @@ for a in range(0,6):
         patches.append(Polygon(pts, closed=True,facecolor='none',linewidth=3))
         
 # Slopes of reference triangle (bottom)
-
-slope_right.append((pts_list[4][1]-y)/(pts_list[4][0]-x))
-slope_left.append((pts_list[3][1]-y)/(pts_list[3][0]-x))
-slope_bottom.append((pts_list[4][1]-pts_list[3][1])/(pts_list[4][0]-pts_list[3][0]))
-
+        
+slope_right = (pts_list[4][1]-y)/(pts_list[4][0]-x)
+slope_left = (pts_list[3][1]-y)/(pts_list[3][0]-x)
+lower_bound = pts_list[3][1]
+        
 #q_xy,r_xy = crt2ax(test_x,test_y,size)
 
 # Hexagonal Grid Drawing
@@ -89,16 +88,16 @@ for r in range(-n,n):
                 #        patches.append(polygon_xy)
                 
                 # Tile reference triangle with hexagonal grid (blue)
-                if (hex_center[1]<=slope_left[0]*(hex_center[0]-x)+y and
-                        hex_center[1]>=slope_bottom[0]*(hex_center[0]-pts_list[4][0])+pts_list[4][1] and
-                        hex_center[1]<=slope_right[0]*(hex_center[0]-x)+y):
-                    hexes.append([q,r])
-                    tri_hexes.append([q,r])
-                    tri_hexes2.append([q,r])
-                    polygon = mpatches.RegularPolygon(hex_center, 6, size, color='blue', ec='black')
-                    patches.append(polygon)
-                    counter += 1
-                # Tile remaining hexagonal grid (blank)
+                if (hex_center[1]<=slope_left*(hex_center[0]-x)+y and
+                        hex_center[1]>=lower_bound and
+                        hex_center[1]<=slope_right*(hex_center[0]-x)+y):
+                        hexes.append([q,r])
+                        tri_hexes.append([q,r])
+                        tri_hexes2.append([q,r])
+                        polygon = mpatches.RegularPolygon(hex_center, 6, size, color='blue', ec='black')
+                        patches.append(polygon)
+                        counter += 1    
+                # Tile remaining hexagonal grid (blank)                                             
                 else:
                         hexes.append([q,r])
                         polygon2 = mpatches.RegularPolygon(hex_center, 6, size, color='none', ec='black')
@@ -122,8 +121,9 @@ def focal_coord(x_prime, y_prime):
         hex_center = drawConvert(q,r,size)
         polygon2 = mpatches.RegularPolygon(hex_center, 6, size, color=color_list[index], ec='black')
         patches.append(polygon2)
-        if (hex_center[1]<=slope_left[0]*(hex_center[0]-x)+y and
-                hex_center[1]>=slope_bottom[0]*(hex_center[0]-pts_list[4][0])+pts_list[4][1] and hex_center[1]<=slope_right[0]*(hex_center[0]-x)+y):
+        if (hex_center[1]<=slope_left*(hex_center[0]-x)+y and
+            hex_center[1]>=lower_bound and
+            hex_center[1]<=slope_right*(hex_center[0]-x)+y):
             final = [q,r]
             if (index == 0):
                 hex_number = index
