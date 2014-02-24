@@ -61,7 +61,7 @@ pts_list[3],pts_list[0] = pts_list[0],pts_list[3]
 pts_list[4],pts_list[1] = pts_list[1],pts_list[4]
 pts_list[5],pts_list[2] = pts_list[2],pts_list[5]
 
-# Slopes of reference triangle (bottom)
+# Slopes of triangles
 
 for i in range(0,6):
     if (i < 2):
