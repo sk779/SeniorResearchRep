@@ -8,6 +8,7 @@ from collections import Counter
 import math
 import pandas
 from matplotlib.patches import Polygon
+from operator import itemgetter, attrgetter
 
 # Global Variables/Initializations
 
@@ -28,6 +29,13 @@ x_prime = []
 y_prime = []
 hex_list = []
 error_pts = []
+tri1 = []
+tri2 = []
+tri3 = []
+tri4 = []
+tri5 = []
+tri6 = []
+
 
 # Cartesian -> Axial
 
@@ -47,6 +55,12 @@ y = input('y center: ')
 radius = input('radius: ')
 pt_num = input('# rand pts to test: ')
 
+#bound = 50
+#x = 25
+#y = 25
+#radius = 10
+#pt_num = 10
+
 n= 2*bound
 
 # Determine hexagon vertices
@@ -56,14 +70,14 @@ for k in range(0,6):
 
 # Draw focal plane
 
-for a in range(0,6):
-    if (a == 5):
-        pts = np.array([[x,y],pts_list[5],pts_list[0]])
-        patches.append(Polygon(pts, closed=True,facecolor='none',linewidth=3))
-    else:
-        pts = np.array([[x,y],pts_list[a],pts_list[a+1]])
-        patches.append(Polygon(pts, closed=True,facecolor='none',linewidth=3))
-        
+#for a in range(0,6):
+#    if (a == 5):
+#        pts = np.array([[x,y],pts_list[5],pts_list[0]])
+#        patches.append(Polygon(pts, closed=True,facecolor='none',linewidth=3))
+#    else:
+#        pts = np.array([[x,y],pts_list[a],pts_list[a+1]])
+#        patches.append(Polygon(pts, closed=True,facecolor='none',linewidth=3))
+
 # Slopes of reference triangle (bottom)
 
 for i in range(0,6):
@@ -105,6 +119,7 @@ for r in range(-n,n):
                     polygon = mpatches.RegularPolygon(hex_center, 6, size, color='blue', ec='black')
                     patches.append(polygon)
                     counter += 1
+                    tri1.append([q,r])
                 if (hex_center[1]>=slope_left[1]*(hex_center[0]-x)+y and
                         hex_center[1]>=slope_bottom[1]*(hex_center[0]-pts_list[4][0])+pts_list[4][1] and
                         hex_center[1]<=slope_right[1]*(hex_center[0]-x)+y):
@@ -114,6 +129,7 @@ for r in range(-n,n):
                     polygon = mpatches.RegularPolygon(hex_center, 6, size, color='green', ec='black')
                     patches.append(polygon)
                     counter += 1
+                    tri2.append([q,r])
                 if (hex_center[1]>=slope_left[2]*(hex_center[0]-x)+y and
                         hex_center[1]<=slope_bottom[2]*(hex_center[0]-pts_list[5][0])+pts_list[5][1] and
                         hex_center[1]<=slope_right[2]*(hex_center[0]-x)+y):
@@ -123,6 +139,7 @@ for r in range(-n,n):
                     polygon = mpatches.RegularPolygon(hex_center, 6, size, color='red', ec='black')
                     patches.append(polygon)
                     counter += 1
+#                    tri3.append([q,r])
                 if (hex_center[1]>=slope_left[3]*(hex_center[0]-x)+y and
                         hex_center[1]<=slope_bottom[3]*(hex_center[0]-pts_list[0][0])+pts_list[0][1] and
                         hex_center[1]>=slope_right[3]*(hex_center[0]-x)+y):
@@ -132,6 +149,7 @@ for r in range(-n,n):
                     polygon = mpatches.RegularPolygon(hex_center, 6, size, color='cyan', ec='black')
                     patches.append(polygon)
                     counter += 1
+                    tri4.append([q,r])
                 if (hex_center[1]<=slope_left[4]*(hex_center[0]-x)+y and
                         hex_center[1]<=slope_bottom[4]*(hex_center[0]-pts_list[1][0])+pts_list[1][1] and
                         hex_center[1]>=slope_right[4]*(hex_center[0]-x)+y):
@@ -141,6 +159,7 @@ for r in range(-n,n):
                     polygon = mpatches.RegularPolygon(hex_center, 6, size, color='magenta', ec='black')
                     patches.append(polygon)
                     counter += 1
+                    tri5.append([q,r])
                 if (hex_center[1]<=slope_left[5]*(hex_center[0]-x)+y and
                         hex_center[1]>=slope_bottom[5]*(hex_center[0]-pts_list[2][0])+pts_list[2][1] and
                         hex_center[1]>=slope_right[5]*(hex_center[0]-x)+y):
@@ -150,6 +169,8 @@ for r in range(-n,n):
                     polygon = mpatches.RegularPolygon(hex_center, 6, size, color='yellow', ec='black')
                     patches.append(polygon)
                     counter += 1
+#                    tri6.append([q,r])
+
 
                 # Tile remaining hexagonal grid (blank)
 #                else:
@@ -158,74 +179,127 @@ for r in range(-n,n):
 #                        patches.append(polygon2)
 #                        counter2 += 1
 
-# Determining focal plane coordinate scheme
-                                                
-def focal_coord(x_prime, y_prime):
-    final = 0
-    hex_number = 0
-    for index in range(0,6):
-        new_radius = math.sqrt((y_prime-y)*(y_prime-y)+(x_prime-x)*(x_prime-x))
-        if (y_prime <= y):
-            g = x + new_radius*math.cos(((math.pi/3)*index)-math.acos((x_prime-x)/new_radius))
-            h = y + new_radius*math.sin(((math.pi/3)*index)-math.acos((x_prime-x)/new_radius))
-        else:
-            g = x + new_radius*math.cos(((math.pi/3)*index)-math.acos((x_prime-x)/new_radius))
-            h = y - new_radius*math.sin(((math.pi/3)*index)-math.acos((x_prime-x)/new_radius))    
-        q,r = crt2ax(g,h,size)
-        hex_center = drawConvert(q,r,size)
-#        polygon2 = mpatches.RegularPolygon(hex_center, 6, size, color=color_list[index], ec='black')
-#        patches.append(polygon2)
-        if (hex_center[1]<=slope_left[0]*(hex_center[0]-x)+y and
-                hex_center[1]>=slope_bottom[0]*(hex_center[0]-pts_list[4][0])+pts_list[4][1] and hex_center[1]<=slope_right[0]*(hex_center[0]-x)+y):
-            final = [q,r]
-            if (index == 0):
-                hex_number = index
-            elif (y_prime <= y):
-                hex_number = -index+6
-            else:
-                hex_number = index
-            #print final, hex_number
-            #print g,h
-            plt.plot(g, h, 'ro')
-    return final, hex_number
+def my_compare_c4(x,y):
+    if (x[1] < y[1]):
+        return -1
+    elif (x[1] > y[1]):
+        return 1
+    elif (x[1] == y[1]):
+        return y[0] - x[0]
+
+tri1 = sorted(tri1, key=itemgetter(1), reverse=True)
+tri2 = sorted(tri2, key=itemgetter(0,1))
+tri4 = sorted(tri4, cmp=my_compare_c4)
+tri5 = sorted(tri5, key=itemgetter(0,1), reverse=True)
+
+tri2_diff = tri2[len(tri2)-1][0]-tri2[0][0]+1
+print tri2_diff
+tri3_start = [tri2[0][0],tri2[0][1]+1]
+print tri3_start
+
+for i in range(0,tri2_diff+1):
+    k = i
+    l = 0
+    for j in range(0,i+1):
+        q = tri3_start[0] + k
+        k  = k - 1
+        r = tri3_start[1] + l
+        l = l + 1
+        tri3.append([q,r])
+
+tri5_diff = tri5[0][0]+1-tri5[len(tri5)-1][0]
+print tri5_diff
+tri5_start = [tri5[0][0]+1,tri5[0][1]-1]
+print tri5_start
+
+for i in range(0,tri5_diff+1):
+    k = i
+    l = 0
+    for j in range(0,i+1):
+        q = tri5_start[0] - k
+        k  = k - 1
+        r = tri5_start[1] - l
+        l = l + 1
+        tri6.append([q,r])
+
 
 # Random Number Generator
 
-for i in range(0,pt_num):
-    x_prime.append(random.uniform(2, bound-2))
-    y_prime.append(random.uniform(2, bound-2))
 
-plt.plot(x_prime, y_prime, 'bo')
-tri_hexes2.reverse()
-new_index = tri_hexes2
+def focal_coord(x_prime,y_prime):
 
-# Determine Focal Coordinates
+    q,r = crt2ax(x_prime,y_prime,size)
+    hex_center = drawConvert(q,r,size)
+
+    if (hex_center[1]<=slope_left[0]*(hex_center[0]-x)+y and
+        hex_center[1]>=slope_bottom[0]*(hex_center[0]-pts_list[3][0])+pts_list[3][1] and
+        hex_center[1]<=slope_right[0]*(hex_center[0]-x)+y):
+        print [[x_prime,y_prime],1,tri1.index([q,r])+1]
+
+    if (hex_center[1]>=slope_left[1]*(hex_center[0]-x)+y and
+        hex_center[1]>=slope_bottom[1]*(hex_center[0]-pts_list[4][0])+pts_list[4][1] and
+        hex_center[1]<=slope_right[1]*(hex_center[0]-x)+y):
+        print [[x_prime,y_prime],2,tri2.index([q,r])+1]
+
+    if (hex_center[1]>=slope_left[2]*(hex_center[0]-x)+y and
+        hex_center[1]<=slope_bottom[2]*(hex_center[0]-pts_list[5][0])+pts_list[5][1] and
+        hex_center[1]<=slope_right[2]*(hex_center[0]-x)+y):
+        print [[x_prime,y_prime],3,tri3.index([q,r])+1]
+
+    if (hex_center[1]>=slope_left[3]*(hex_center[0]-x)+y and
+        hex_center[1]<=slope_bottom[3]*(hex_center[0]-pts_list[0][0])+pts_list[0][1] and
+        hex_center[1]>=slope_right[3]*(hex_center[0]-x)+y):
+        print [[x_prime,y_prime],4,tri4.index([q,r])+1]
+
+    if (hex_center[1]<=slope_left[4]*(hex_center[0]-x)+y and
+        hex_center[1]<=slope_bottom[4]*(hex_center[0]-pts_list[1][0])+pts_list[1][1] and
+        hex_center[1]>=slope_right[4]*(hex_center[0]-x)+y):
+        print [[x_prime,y_prime],5,tri5.index([q,r])+1]
+
+    if (hex_center[1]<=slope_left[5]*(hex_center[0]-x)+y and
+        hex_center[1]>=slope_bottom[5]*(hex_center[0]-pts_list[2][0])+pts_list[2][1] and
+        hex_center[1]>=slope_right[5]*(hex_center[0]-x)+y):
+        print [[x_prime,y_prime],6,tri6.index([q,r])+1]
+
+#for i in range(0,pt_num):
+#    x_prime = (random.uniform(2, bound-2))
+#    y_prime = (random.uniform(2, bound-2))
+#    plt.plot(x_prime, y_prime, 'bo')
+#    focal_coord(x_prime,y_prime)
 
 i_loop = 0
 final_countdown = 0
-while (i_loop < len(x_prime)):
+while (i_loop < pt_num):
     try:
-        tri_index = new_index.index(focal_coord(x_prime[i_loop], y_prime[i_loop])[0])+1
-        hex_number = focal_coord(x_prime[i_loop], y_prime[i_loop])[1]+1
-        hex_list.append(hex_number)
-        output = [[x_prime[i_loop],y_prime[i_loop]],tri_index,hex_number]
+        x_prime = (random.uniform(2, bound-2))
+        y_prime = (random.uniform(2, bound-2))
+        #plt.plot(x_prime, y_prime, 'bo')
+        focal_coord(x_prime,y_prime)
         i_loop = i_loop + 1
-        final_countdown = final_countdown + 1
-        print output
     except (ValueError):
         i_loop = i_loop + 1
+        print 'WHOA',[[x_prime, y_prime],crt2ax(x_prime,y_prime,size)]
+        final_countdown = final_countdown + 1
         continue
 
-#for i in range(0,len(x_prime)):
-#    tri_index = new_index.index(focal_coord(x_prime[i], y_prime[i])[0])+1
-#    hex_number = focal_coord(x_prime[i], y_prime[i])[1]+1
-#    output = [[x_prime[i],y_prime[i]],tri_index,hex_number]
-#    print output
 
 print 'hex in wedge ',counter
 print 'hex not in wedge ',counter2
-print 'captured points', final_countdown
+print 'not captured points', final_countdown
 print Counter(hex_list)
+
+#print tri1
+#print("\n")
+#print tri2
+#print("\n")
+#print tri3
+#print("\n")
+#print tri4
+#print("\n")
+#print tri5
+#print("\n")
+#print tri6
+
 
 plt.axes().set_aspect('equal', 'datalim')
 collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3, match_original=True)
