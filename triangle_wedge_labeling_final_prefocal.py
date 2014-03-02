@@ -41,11 +41,11 @@ def crt2ax(x,y,size):
 
 print 'To get ~5000 Hex, radius must be 70 or 71'
 
-bound = input('bound: ')
-x = input('x center: ')
-y = input('y center: ')
-radius = input('radius: ')
-pt_num = input('# rand pts to test: ')
+bound = 500#input('bound: ')
+x = 200#input('x center: ')
+y = 300#input('y center: ')
+radius = 60#input('radius: ')
+pt_num = 1000#input('# rand pts to test: ')
 
 n= 2*bound
 
@@ -211,7 +211,7 @@ while (i_loop < len(x_prime)):
         output = [[x_prime[i_loop],y_prime[i_loop]],tri_index,hex_number]
         i_loop = i_loop + 1
         final_countdown = final_countdown + 1
-        print output
+        # print output
     except (ValueError):
         i_loop = i_loop + 1
         continue
