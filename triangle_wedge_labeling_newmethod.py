@@ -22,6 +22,7 @@ slope_right=[]
 slope_bottom=[]
 slope_left=[]
 color_list=["blue","green","red","cyan","magenta","yellow"]
+marker_list=["o","s","p","*","D",">"]
 slopeleft_ineq=["<=",">=",">=",">=","<=","<="]
 slopebottom_ineq=[">=",">=","<=","<=","<=",">="]
 sloperight_ineq=["<=","<=","<=",">=",">=",">="]
@@ -148,6 +149,7 @@ def focal_coord(x_prime,y_prime):
         if (ops[slopeleft_ineq[i]](hex_center[1],slope_left[i]*(hex_center[0]-x)+y) and
             ops[slopebottom_ineq[i]](hex_center[1],slope_bottom[i]*(hex_center[0]-pts_list[i][0])+pts_list[i][1]) and
             ops[sloperight_ineq[i]](hex_center[1],slope_right[i]*(hex_center[0]-x)+y)):
+            plt.plot(x_prime, y_prime, marker=marker_list[i],color='black')
             print [[x_prime,y_prime],[q,r],i+1,tri_list[i].index([q,r])+1]
 
 # Input random points to test
@@ -158,12 +160,15 @@ while (i_loop < pt_num):
     try:
         x_prime = (random.uniform(2, bound-2))
         y_prime = (random.uniform(2, bound-2))
-        #plt.plot(x_prime, y_prime, 'bo')
         focal_coord(x_prime,y_prime)
         i_loop = i_loop + 1
     except (ValueError):
         i_loop = i_loop + 1
         error_count = error_count + 1
+        q,r = crt2ax(x_prime,y_prime,size)
+        hex_center = drawConvert(q,r,size)
+        polygon = mpatches.RegularPolygon(hex_center, 6, size, color='black', ec='black')
+        patches.append(polygon)
         continue
 
 print '# of Hex ',counter
