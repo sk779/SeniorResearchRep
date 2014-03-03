@@ -27,8 +27,10 @@ ReadNorm <- function(fn) {
 # Process the pairs file 
 # Here, we assume that this is generated assuming purely periodic boundary conditions
 # Therefore RR is completely isotropic and can be analytically estimated. 
-pp <- ReadPairs("t1-DD.dat")
-norm <- ReadNorm("t1-norm.dat")
+setwd('/Users/Ben/Documents/Yale/Senior Year/Spring 2014/Physics 472 Independent Projects in Physics/SeniorResearchRep')
+dfile = '../data/gals4'
+pp <- ReadPairs(paste(dfile,"DD.dat",sep='-'))
+norm <- ReadNorm(paste(dfile,"norm.dat",sep='-'))
 Lbox <- 1000.0
 density <- norm/(Lbox^3)
 
@@ -38,8 +40,8 @@ rhi <- pp$rbins[-1]
 
 # These parameters define the logarithmic bins
 rmin <- 0.3
-rmax <- 75.0
-nbins <- 15
+rmax <- 200
+nbins <- 200
 logbins <- exp(seq(log(rmin),log(rmax),length.out=nbins))
 ir <- cut(rlo, logbins, right=TRUE)
 
@@ -50,7 +52,10 @@ xi$rrsum <- (4*pi/3)*((xi$rmax^3) - (xi$rmin^3))*density*norm
 xi$xi <- xi$ddsum/xi$rrsum - 1
 xi$r0 <- sqrt(xi$rmin*xi$rmax)
 
-gg <- ggplot(xi, aes(x=r0, y=xi))
+# set xi to appropriate variable
+gg <- ggplot(g4, aes(x=r0, y=xi))
+gg <- gg + geom_point() +  geom_point(data = g2mil, aes(y = xi), colour = 'green', size = 2)
+gg <- gg + geom_point() +  geom_point(data = g4b, aes(y = xi), colour = 'red', size = 2)
 gg <- gg + geom_point()+scale_x_log10()+scale_y_log10()
 gg <- gg + xlab("r (Mpc/h)")  + ylab(expression(xi(r)))
-ggsave("t1-xi.png", plot=gg)
+ggsave('../plots/gals4-xi.png', plot=gg)

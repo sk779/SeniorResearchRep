@@ -1,0 +1,726 @@
+v=V(d)[3]
+v
+nbhd = neighborhood(d,2,v)
+bnhd
+nbhd
+nbhd = neighborhood(d,1,v)
+nbhd
+nbhd = neighborhood(d,2,v)
+nbhd
+nbrs = neighbors(d,v)
+nbrs
+nbhd-[3]
+nbhd
+n
+nbhd
+nbhd[-1]
+nbhd
+nbhd[2:length(nbhd)]
+nbhd[1][2:length(nbhd)]
+nbhd[0][2:length(nbhd)]
+nbhd
+length(nbhd)
+length(nbhd[1])
+length(nbhd[1][1])
+length(nbhd[1,1])
+length(nbhd[[1]])
+nbhd[[1]]
+nbhd = nbhd[2:length(nbhd)]
+bnhd
+nbhd
+nbhd = neighborhood(d,2,v)
+nbhd
+nbhd = nbhd[[1]]
+nbhd
+nbhd = nbhd[2:length(nbhd)]
+nbhd
+sum(get.vertex.attribute(d, 'vic', nbhd))
+get.vertex.attribute(d, 'vic', nbhd)
+for (i in 1:100){#
+	v = V(d)[i]#
+	nbhd = neighborhood(d,2,v)#
+	nbhd = nbhd[[1]]#
+	nbhd = nbhd[2:length(nbhd)]#
+	nvics[i] = sum(get.vertex.attribute(d, 'vic', nbhd))#
+}
+nvics[i] = sum(get.vertex.attribute(d, 'vic', nbhd))
+sum(get.vertex.attribute(d, 'vic', nbhd))
+i
+v
+nbhd
+v
+neighborhood(d,2,v)
+nbhd = nbhd[[1]]
+nbhd
+nbhd = nbhd[[1]]
+nbhd = neighborhood(d,2,v)
+nbhd = nbhd[[1]]
+nbhd
+nbhd = neighborhood(d,2,v)
+nbhd
+nbhd = nbhd[[1]]
+nbhd
+nbhd = nbhd[2:length(nbhd)]
+nbhd
+for (i in 1:100){#
+	v = V(d)[i]#
+	nbhd = neighborhood(d,2,v)#
+	nbhd = nbhd[[1]]#
+	if (length(nbhd)>1){#
+		nbhd = nbhd[2:length(nbhd)]#
+		nvics[i] = sum(get.vertex.attribute(d, 'vic', nbhd))#
+	} else {#
+		nvics[i] = 0#
+	}#
+}
+nvics
+nvics=0
+for (i in 1:100){#
+	v = V(d)[i]#
+	nbhd = neighborhood(d,2,v)#
+	nbhd = nbhd[[1]]#
+	if (length(nbhd)>1){#
+		nbhd = nbhd[2:length(nbhd)]#
+		nvics[i] = sum(get.vertex.attribute(d, 'vic', nbhd))#
+	} else {#
+		nvics[i] = 0#
+	}#
+}
+nvics
+d=d15b
+i=68
+v = V(d)[i]
+v
+nbhd = neighborhood(d,2,v)
+nbhd
+neighborhood(d,1,v)
+get.vertex.attribute(d,'vic',v)
+degree(d,v)
+for (i in 1:vcount(d)){#
+	v = V(d)[i]#
+	nbhd = neighborhood(d,2,v)#
+	nbhd = nbhd[[1]]#
+	nnbrs = length(nbhd)#
+	if (nnbrs>1){#
+		nbhd = nbhd[2:nnbrs]#
+		nvics[i] = sum(get.vertex.attribute(d, 'vic', nbhd))#
+	} else {#
+		nvics[i] = 0#
+	}#
+}
+head(nvics)
+nvics[1:100]
+nvics[1:1000]
+table(nvics)
+vics = get.vertex.attribute(d,'vic')
+head(vics)
+vics[1:100]
+mean(nvics[vics==1])
+mean(nvics[vics==0])
+mean(degree(d,vics==1))
+mean(degree(d,vics==0))
+plot(table(nvics[vics==1]))
+plot(table(nvics[vics==0]))
+plot(table(nvics[vics==1]))
+plot(table(nvics[vics==0]))
+par(mfrow=c(2,1))
+plot(table(nvics[vics==1]))
+plot(table(nvics[vics==0]))
+plot(table(nvics[vics==0]),xlim=c(0,4))
+plot(table(nvics[vics==0]),xlim=c(0,31))
+par(mfrow=c(2,1))#
+plot(table(nvics[vics==1]),xlim=c(0,31))#
+plot(table(nvics[vics==0]))
+plot(table(nvics[vics==0]),xlim=c(1,31))
+plot(table(nvics[vics==1]),xlim=c(1,31))
+par(mfrow=c(2,1))#
+plot(table(nvics[vics==1]),xlim=c(0,31))#
+plot(table(nvics[vics==0]))
+dnv=set.vertex.attribute(d, 'vic', index=V(d), 0)
+rand_vics = sample(V(d),1299)
+dnv=set.vertex.attribute(dnv, 'vic', index=rand_vics, 1)
+d=dnv
+ls()
+library(igraph)
+load("/Users/Ben/Documents/Yale/Senior Year/Spring 2014/Sociology 472 Individual Study/Example Chicago Networks/district15.RData")
+d=d15b
+dnv=set.vertex.attribute(d, 'vic', index=V(d), 0)#
+rand_vics = sample(V(d),1299)#
+dnv=set.vertex.attribute(dnv, 'vic', index=rand_vics, 1)
+d=dnv
+for (i in 1:vcount(d)){#
+	v = V(d)[i]#
+	nbhd = neighborhood(d,2,v)#
+	nbhd = nbhd[[1]]#
+	nnbrs = length(nbhd)#
+	if (nnbrs>1){#
+		nbhd = nbhd[2:nnbrs]#
+		nvics[i] = sum(get.vertex.attribute(d, 'vic', nbhd))#
+	} else {#
+		nvics[i] = 0#
+	}#
+}#
+vics = get.vertex.attribute(d,'vic')
+nvics=0
+for (i in 1:vcount(d)){#
+	v = V(d)[i]#
+	nbhd = neighborhood(d,2,v)#
+	nbhd = nbhd[[1]]#
+	nnbrs = length(nbhd)#
+	if (nnbrs>1){#
+		nbhd = nbhd[2:nnbrs]#
+		nvics[i] = sum(get.vertex.attribute(d, 'vic', nbhd))#
+	} else {#
+		nvics[i] = 0#
+	}#
+}#
+vics = get.vertex.attribute(d,'vic')
+mean(nvics[vics==1])
+mean(nvics[vics==0])
+par(mfrow=c(2,1))#
+plot(table(nvics[vics==1]),xlim=c(0,31))#
+plot(table(nvics[vics==0]))
+par(mfrow=c(2,1))#
+plot(table(nvics[vics==1]))#
+plot(table(nvics[vics==0]))
+par(mfrow=c(2,1))#
+plot(table(nvics[vics==1]),xlim=c(0,14))#
+plot(table(nvics[vics==0]))
+betweenness(d,V(d))
+betweenness(d,3)
+closeness(d,2)
+closeness(d,1)
+closeness(d,3)
+closeness(d,1:3)
+closeness(d,1:300)
+c=closeness(d,V(d))
+head(c)
+hist(c)
+hist(c,50)
+hist(c,500)
+table(c)
+plot(table(c))
+c[vics==1]
+mean(c[vics==1])
+mean(c[vics==0])
+c=closeness(d15b,V(d15b))
+mean(c[vics==0])
+mean(c[vics==1])
+for (i=1:T):
+for (i in 1:T):
+T = length(primes)
+primes = c(2,3,5,7,11,13,17)
+T = length(primes)
+n = 18
+for (i in 1:T):
+0==0
+primes = c(2,3,5,7,11,13,17)#
+T = length(primes)#
+n = 18
+opt = matrix(0,nrow=T,ncol=n)
+opt
+for (i in 1:T){
+for (i in 1:T){#
+	for (num in n:(primes[i]-1)){#
+		if ((num - primes[i])==0){#
+			opt[i,num] = opt[(i-1),num] + 1#
+		} else if ((num - primes[i])>0){#
+			opt[i,num] = opt[(i-1),num] + opt[(i-1),(num-primes[i])]#
+		}#
+	}#
+}#
+#
+print(opt[T,n])
+i
+opt
+num
+num in n:(primes[i]-1)
+num = n:(primes[i]-1)
+num
+if ((num - primes[i])==0){
+opt[i,num] = opt[(i-1),num] + 1
+}
+num-primes[i]
+num=16
+o
+i
+for (num in n:(primes[i]-1)){#
+		if ((num - primes[i])==0){#
+			opt[i,num] = opt[(i-1),num] + 1#
+		} else if ((num - primes[i])>0){#
+			opt[i,num] = opt[(i-1),num] + opt[(i-1),(num-primes[i])]#
+		}#
+	}
+for (num in n:(primes[i]-1)){#
+		if ((num - primes[i])==0){#
+			opt[i,num] = opt[(i-1),num] + 1#
+		}
+}
+primes = c(2,3,5,7,11,13,17)#
+T = length(primes)#
+n = 18
+opt
+i
+i=1
+num
+num=18
+num=n
+num
+if ((num - primes[i])==0){#
+			opt[i,num] = opt[(i-1),num] + 1#
+		} else if ((num - primes[i])>0){#
+			opt[i,num] = opt[(i-1),num] + opt[(i-1),(num-primes[i])]#
+		}
+num
+(num - primes[i])
+if ((num - primes[i])==0){#
+			opt[i,num] = opt[(i-1),num] + 1#
+		}
+if ((num - primes[i])>0){#
+			opt[i,num] = opt[(i-1),num] + opt[(i-1),(num-primes[i])]#
+		}
+opt
+num - primes[i])>0
+(num - primes[i])>0
+opt[i,num]
+opt[(i-1),num]
+opt[1,2] = 1
+opt
+for (i in 2:T){#
+	for (num in n:(primes[i]-1)){#
+		if ((num - primes[i])==0){#
+			opt[i,num] = opt[(i-1),num] + 1#
+		} else if ((num - primes[i])>0){#
+			opt[i,num] = opt[(i-1),num] + opt[(i-1),(num-primes[i])]#
+		}#
+	}#
+}
+opt
+)
+print(opt[T,n])
+primes = c(2,3,5,7,11,13,17)#
+T = length(primes)#
+n = 18#
+#
+opt = matrix(0,nrow=T,ncol=n)#
+opt[1,2] = 1#
+#
+for (i in 2:T){#
+	for (num in n:(primes[i]-1)){#
+		if ((num - primes[i])==0){#
+			opt[i,num] = opt[(i-1),num] + 1#
+		} else if ((num - primes[i])>0){#
+			opt[i,num] = opt[(i-1),num] + opt[(i-1),(num-primes[i])]#
+		} else {#
+			opt[i,num] = opt[(i-1),num]#
+		}#
+	}
+opt
+primes = c(2,3,5,7,11,13,17)#
+T = length(primes)#
+n = 18#
+#
+opt = matrix(0,nrow=T,ncol=n)#
+opt[1,2] = 1#
+#
+for (i in 2:T){#
+	for (num in n:(primes[i]-1)){#
+		if ((num - primes[i])==0){#
+			opt[i,num] = opt[(i-1),num] + 1#
+		} else if ((num - primes[i])>0){#
+			opt[i,num] = opt[(i-1),num] + opt[(i-1),(num-primes[i])]#
+		} else {#
+			opt[i,num] = opt[(i-1),num]#
+		}#
+	}#
+}
+opt
+primes = c(2,3,5,7)#,11,13,17)#
+T = length(primes)#
+n = 7
+opt = matrix(0,nrow=T,ncol=n)#
+opt[1,2] = 1#
+#
+for (i in 2:T){#
+	for (num in n:(primes[i]-1)){#
+		if ((num - primes[i])==0){#
+			opt[i,num] = opt[(i-1),num] + 1#
+		} else if ((num - primes[i])>0){#
+			opt[i,num] = opt[(i-1),num] + opt[(i-1),(num-primes[i])]#
+		} else {#
+			opt[i,num] = opt[(i-1),num]#
+		}#
+	}#
+}
+opt
+opt = matrix(0,nrow=T,ncol=n)#
+opt[1,2] = 1
+opt
+i=2
+num=n
+num-primes[i]
+opt[i,num]
+opt[(i-1),num]
+opt[(i-1),(num-primes[i])]
+primes[i]-1
+n
+i
+num - primes[i]
+opt = matrix(0,nrow=T,ncol=n)#
+opt[1,2] = 1#
+#
+for (i in 2:T){#
+	for (num in n:(1)){#
+		if ((num - primes[i])==0){#
+			opt[i,num] = opt[(i-1),num] + 1#
+		} else if ((num - primes[i])>0){#
+			opt[i,num] = opt[(i-1),num] + opt[(i-1),(num-primes[i])]#
+		} else {#
+			opt[i,num] = opt[(i-1),num]#
+		}#
+	}#
+}
+opt
+primes = c(2,3,5,7,11,13,17)#
+T = length(primes)#
+n = 18#
+#
+opt = matrix(0,nrow=T,ncol=n)#
+opt[1,2] = 1#
+#
+for (i in 2:T){#
+	for (num in n:1){#
+		if ((num - primes[i])==0){#
+			opt[i,num] = opt[(i-1),num] + 1#
+		} else if ((num - primes[i])>0){#
+			opt[i,num] = opt[(i-1),num] + opt[(i-1),(num-primes[i])]#
+		} else {#
+			opt[i,num] = opt[(i-1),num]#
+		}#
+	}#
+}#
+#
+print(opt[T,n])
+opt
+library(plyr)
+library(ggplot2)
+ReadPairs <- function (fn) {#
+  # Read in a pairs file, and fill in a list with useful information. This also rebins the data in r#
+  # Args :#
+  #   fn : filename#
+  # Outputs :#
+  #     pairs : array (nmu, nr) of pair counts#
+  ff <- gzfile(fn, "r")#
+  # Read in rbins#
+  rbins <- scan(ff,numeric(0),nlines=1)#
+  nrbins <- length(rbins)-1#
+  mubins <- scan(ff, numeric(0),nlines=1)#
+  nmubins <- length(mubins)-1#
+  pairs <- array(scan(ff, numeric(0)), c(nmubins, nrbins))#
+  close(ff)#
+  list(rbins=rbins, mubins=mubins, pairs=pairs)#
+}#
+#
+ReadNorm <- function(fn) {#
+  # Read in the norm file#
+  read.table(fn)[,2]#
+}
+setwd('/Users/Ben/Documents/Yale/Senior Year/Spring 2014/Physics 472 Independent Projects in Physics/SeniorResearchRep')
+dfile = '../data/gals1mil'#
+pp <- ReadPairs(paste(dfile,"DD.dat",sep='-'))#
+norm <- ReadNorm(paste(dfile,"norm.dat",sep='-'))#
+Lbox <- 1000.0#
+density <- norm/(Lbox^3)#
+#
+dd <- colSums(pp$pairs)#
+rlo <- pp$rbins[-length(pp$rbins)]#
+rhi <- pp$rbins[-1]#
+#
+# These parameters define the logarithmic bins#
+rmin <- 0.3#
+rmax <- 200#
+nbins <- 200#
+logbins <- exp(seq(log(rmin),log(rmax),length.out=nbins))#
+ir <- cut(rlo, logbins, right=TRUE)#
+#
+# Make data frame#
+df <- data.frame(ir=ir, rlo=rlo, rhi=rhi, dd=dd)#
+xi <- na.omit(ddply(df, .(ir), summarise, rmin=min(rlo), rmax=max(rhi), ddsum=sum(dd)))#
+xi$rrsum <- (4*pi/3)*((xi$rmax^3) - (xi$rmin^3))*density*norm#
+xi$xi <- xi$ddsum/xi$rrsum - 1#
+xi$r0 <- sqrt(xi$rmin*xi$rmax)
+g1m=xi
+g1m
+dfile = '../data/gals1'#
+pp <- ReadPairs(paste(dfile,"DD.dat",sep='-'))#
+norm <- ReadNorm(paste(dfile,"norm.dat",sep='-'))#
+Lbox <- 1000.0#
+density <- norm/(Lbox^3)#
+#
+dd <- colSums(pp$pairs)#
+rlo <- pp$rbins[-length(pp$rbins)]#
+rhi <- pp$rbins[-1]#
+#
+# These parameters define the logarithmic bins#
+rmin <- 0.3#
+rmax <- 200#
+nbins <- 200#
+logbins <- exp(seq(log(rmin),log(rmax),length.out=nbins))#
+ir <- cut(rlo, logbins, right=TRUE)#
+#
+# Make data frame#
+df <- data.frame(ir=ir, rlo=rlo, rhi=rhi, dd=dd)#
+xi <- na.omit(ddply(df, .(ir), summarise, rmin=min(rlo), rmax=max(rhi), ddsum=sum(dd)))#
+xi$rrsum <- (4*pi/3)*((xi$rmax^3) - (xi$rmin^3))*density*norm#
+xi$xi <- xi$ddsum/xi$rrsum - 1#
+xi$r0 <- sqrt(xi$rmin*xi$rmax)
+g1=xi
+dfile = '../data/gals1b'#
+pp <- ReadPairs(paste(dfile,"DD.dat",sep='-'))#
+norm <- ReadNorm(paste(dfile,"norm.dat",sep='-'))#
+Lbox <- 1000.0#
+density <- norm/(Lbox^3)#
+#
+dd <- colSums(pp$pairs)#
+rlo <- pp$rbins[-length(pp$rbins)]#
+rhi <- pp$rbins[-1]#
+#
+# These parameters define the logarithmic bins#
+rmin <- 0.3#
+rmax <- 200#
+nbins <- 200#
+logbins <- exp(seq(log(rmin),log(rmax),length.out=nbins))#
+ir <- cut(rlo, logbins, right=TRUE)#
+#
+# Make data frame#
+df <- data.frame(ir=ir, rlo=rlo, rhi=rhi, dd=dd)#
+xi <- na.omit(ddply(df, .(ir), summarise, rmin=min(rlo), rmax=max(rhi), ddsum=sum(dd)))#
+xi$rrsum <- (4*pi/3)*((xi$rmax^3) - (xi$rmin^3))*density*norm#
+xi$xi <- xi$ddsum/xi$rrsum - 1#
+xi$r0 <- sqrt(xi$rmin*xi$rmax)
+g1b=xi
+gg <- ggplot(g1, aes(x=r0, y=xi))#
+gg <- gg + geom_point() +  geom_point(data = g1mil, aes(y = xi), colour = 'green', size = 2)#
+gg <- gg + geom_point() +  geom_point(data = g1b, aes(y = xi), colour = 'red', size = 2)#
+gg <- gg + geom_point()+scale_x_log10()+scale_y_log10()#
+gg <- gg + xlab("r (Mpc/h)")  + ylab(expression(xi(r)))
+g1mil=g1m
+gg <- ggplot(g1, aes(x=r0, y=xi))#
+gg <- gg + geom_point() +  geom_point(data = g1mil, aes(y = xi), colour = 'green', size = 2)#
+gg <- gg + geom_point() +  geom_point(data = g1b, aes(y = xi), colour = 'red', size = 2)#
+gg <- gg + geom_point()+scale_x_log10()+scale_y_log10()#
+gg <- gg + xlab("r (Mpc/h)")  + ylab(expression(xi(r)))
+gg
+ggsave('../plots/gals1-xi.png', plot=gg)
+dfile = '../data/gals2b'#
+pp <- ReadPairs(paste(dfile,"DD.dat",sep='-'))#
+norm <- ReadNorm(paste(dfile,"norm.dat",sep='-'))#
+Lbox <- 1000.0#
+density <- norm/(Lbox^3)#
+#
+dd <- colSums(pp$pairs)#
+rlo <- pp$rbins[-length(pp$rbins)]#
+rhi <- pp$rbins[-1]#
+#
+# These parameters define the logarithmic bins#
+rmin <- 0.3#
+rmax <- 200#
+nbins <- 200#
+logbins <- exp(seq(log(rmin),log(rmax),length.out=nbins))#
+ir <- cut(rlo, logbins, right=TRUE)#
+#
+# Make data frame#
+df <- data.frame(ir=ir, rlo=rlo, rhi=rhi, dd=dd)#
+xi <- na.omit(ddply(df, .(ir), summarise, rmin=min(rlo), rmax=max(rhi), ddsum=sum(dd)))#
+xi$rrsum <- (4*pi/3)*((xi$rmax^3) - (xi$rmin^3))*density*norm#
+xi$xi <- xi$ddsum/xi$rrsum - 1#
+xi$r0 <- sqrt(xi$rmin*xi$rmax)
+g2b=xi
+dfile = '../data/gals2'#
+pp <- ReadPairs(paste(dfile,"DD.dat",sep='-'))#
+norm <- ReadNorm(paste(dfile,"norm.dat",sep='-'))#
+Lbox <- 1000.0#
+density <- norm/(Lbox^3)#
+#
+dd <- colSums(pp$pairs)#
+rlo <- pp$rbins[-length(pp$rbins)]#
+rhi <- pp$rbins[-1]#
+#
+# These parameters define the logarithmic bins#
+rmin <- 0.3#
+rmax <- 200#
+nbins <- 200#
+logbins <- exp(seq(log(rmin),log(rmax),length.out=nbins))#
+ir <- cut(rlo, logbins, right=TRUE)#
+#
+# Make data frame#
+df <- data.frame(ir=ir, rlo=rlo, rhi=rhi, dd=dd)#
+xi <- na.omit(ddply(df, .(ir), summarise, rmin=min(rlo), rmax=max(rhi), ddsum=sum(dd)))#
+xi$rrsum <- (4*pi/3)*((xi$rmax^3) - (xi$rmin^3))*density*norm#
+xi$xi <- xi$ddsum/xi$rrsum - 1#
+xi$r0 <- sqrt(xi$rmin*xi$rmax)
+g2=xi
+gg <- ggplot(g2, aes(x=r0, y=xi))#
+gg <- gg + geom_point() +  geom_point(data = g1mil, aes(y = xi), colour = 'green', size = 2)#
+gg <- gg + geom_point() +  geom_point(data = g2b, aes(y = xi), colour = 'red', size = 2)#
+gg <- gg + geom_point()+scale_x_log10()+scale_y_log10()#
+gg <- gg + xlab("r (Mpc/h)")  + ylab(expression(xi(r)))#
+ggsave('../plots/gals1-xi.png', plot=gg)
+gg
+gg <- ggplot(g1, aes(x=r0, y=xi))#
+gg <- gg + geom_point() +  geom_point(data = g1mil, aes(y = xi), colour = 'green', size = 2)#
+gg <- gg + geom_point() +  geom_point(data = g1b, aes(y = xi), colour = 'red', size = 2)#
+gg <- gg + geom_point()+scale_x_log10()+scale_y_log10()#
+gg <- gg + xlab("r (Mpc/h)")  + ylab(expression(xi(r)))#
+ggsave('../plots/gals1-xi.png', plot=gg)
+gg <- ggplot(g2, aes(x=r0, y=xi))#
+gg <- gg + geom_point() +  geom_point(data = g1mil, aes(y = xi), colour = 'green', size = 2)#
+gg <- gg + geom_point() +  geom_point(data = g2b, aes(y = xi), colour = 'red', size = 2)#
+gg <- gg + geom_point()+scale_x_log10()+scale_y_log10()#
+gg <- gg + xlab("r (Mpc/h)")  + ylab(expression(xi(r)))#
+ggsave('../plots/gals2-xi.png', plot=gg)
+dfile = '../data/gals2mil'#
+pp <- ReadPairs(paste(dfile,"DD.dat",sep='-'))#
+norm <- ReadNorm(paste(dfile,"norm.dat",sep='-'))#
+Lbox <- 1000.0#
+density <- norm/(Lbox^3)#
+#
+dd <- colSums(pp$pairs)#
+rlo <- pp$rbins[-length(pp$rbins)]#
+rhi <- pp$rbins[-1]#
+#
+# These parameters define the logarithmic bins#
+rmin <- 0.3#
+rmax <- 200#
+nbins <- 200#
+logbins <- exp(seq(log(rmin),log(rmax),length.out=nbins))#
+ir <- cut(rlo, logbins, right=TRUE)#
+#
+# Make data frame#
+df <- data.frame(ir=ir, rlo=rlo, rhi=rhi, dd=dd)#
+xi <- na.omit(ddply(df, .(ir), summarise, rmin=min(rlo), rmax=max(rhi), ddsum=sum(dd)))#
+xi$rrsum <- (4*pi/3)*((xi$rmax^3) - (xi$rmin^3))*density*norm#
+xi$xi <- xi$ddsum/xi$rrsum - 1#
+xi$r0 <- sqrt(xi$rmin*xi$rmax)
+g2mil=xi
+dfile = '../data/gals3'#
+pp <- ReadPairs(paste(dfile,"DD.dat",sep='-'))#
+norm <- ReadNorm(paste(dfile,"norm.dat",sep='-'))#
+Lbox <- 1000.0#
+density <- norm/(Lbox^3)#
+#
+dd <- colSums(pp$pairs)#
+rlo <- pp$rbins[-length(pp$rbins)]#
+rhi <- pp$rbins[-1]#
+#
+# These parameters define the logarithmic bins#
+rmin <- 0.3#
+rmax <- 200#
+nbins <- 200#
+logbins <- exp(seq(log(rmin),log(rmax),length.out=nbins))#
+ir <- cut(rlo, logbins, right=TRUE)#
+#
+# Make data frame#
+df <- data.frame(ir=ir, rlo=rlo, rhi=rhi, dd=dd)#
+xi <- na.omit(ddply(df, .(ir), summarise, rmin=min(rlo), rmax=max(rhi), ddsum=sum(dd)))#
+xi$rrsum <- (4*pi/3)*((xi$rmax^3) - (xi$rmin^3))*density*norm#
+xi$xi <- xi$ddsum/xi$rrsum - 1#
+xi$r0 <- sqrt(xi$rmin*xi$rmax)
+g3=xi
+dfile = '../data/gals3b'#
+pp <- ReadPairs(paste(dfile,"DD.dat",sep='-'))#
+norm <- ReadNorm(paste(dfile,"norm.dat",sep='-'))#
+Lbox <- 1000.0#
+density <- norm/(Lbox^3)#
+#
+dd <- colSums(pp$pairs)#
+rlo <- pp$rbins[-length(pp$rbins)]#
+rhi <- pp$rbins[-1]#
+#
+# These parameters define the logarithmic bins#
+rmin <- 0.3#
+rmax <- 200#
+nbins <- 200#
+logbins <- exp(seq(log(rmin),log(rmax),length.out=nbins))#
+ir <- cut(rlo, logbins, right=TRUE)#
+#
+# Make data frame#
+df <- data.frame(ir=ir, rlo=rlo, rhi=rhi, dd=dd)#
+xi <- na.omit(ddply(df, .(ir), summarise, rmin=min(rlo), rmax=max(rhi), ddsum=sum(dd)))#
+xi$rrsum <- (4*pi/3)*((xi$rmax^3) - (xi$rmin^3))*density*norm#
+xi$xi <- xi$ddsum/xi$rrsum - 1#
+xi$r0 <- sqrt(xi$rmin*xi$rmax)
+g3b=xi
+gg <- ggplot(g3, aes(x=r0, y=xi))#
+gg <- gg + geom_point() +  geom_point(data = g2mil, aes(y = xi), colour = 'green', size = 2)#
+gg <- gg + geom_point() +  geom_point(data = g3b, aes(y = xi), colour = 'red', size = 2)#
+gg <- gg + geom_point()+scale_x_log10()+scale_y_log10()#
+gg <- gg + xlab("r (Mpc/h)")  + ylab(expression(xi(r)))#
+ggsave('../plots/gals2-xi.png', plot=gg)
+gg
+gg <- ggplot(g2, aes(x=r0, y=xi))#
+gg <- gg + geom_point() +  geom_point(data = g1mil, aes(y = xi), colour = 'green', size = 2)#
+gg <- gg + geom_point() +  geom_point(data = g2b, aes(y = xi), colour = 'red', size = 2)#
+gg <- gg + geom_point()+scale_x_log10()+scale_y_log10()#
+gg <- gg + xlab("r (Mpc/h)")  + ylab(expression(xi(r)))#
+ggsave('../plots/gals2-xi.png', plot=gg)
+gg <- ggplot(g3, aes(x=r0, y=xi))#
+gg <- gg + geom_point() +  geom_point(data = g2mil, aes(y = xi), colour = 'green', size = 2)#
+gg <- gg + geom_point() +  geom_point(data = g3b, aes(y = xi), colour = 'red', size = 2)#
+gg <- gg + geom_point()+scale_x_log10()+scale_y_log10()#
+gg <- gg + xlab("r (Mpc/h)")  + ylab(expression(xi(r)))#
+ggsave('../plots/gals3-xi.png', plot=gg)
+dfile = '../data/gals4b'#
+pp <- ReadPairs(paste(dfile,"DD.dat",sep='-'))#
+norm <- ReadNorm(paste(dfile,"norm.dat",sep='-'))#
+Lbox <- 1000.0#
+density <- norm/(Lbox^3)#
+#
+dd <- colSums(pp$pairs)#
+rlo <- pp$rbins[-length(pp$rbins)]#
+rhi <- pp$rbins[-1]#
+#
+# These parameters define the logarithmic bins#
+rmin <- 0.3#
+rmax <- 200#
+nbins <- 200#
+logbins <- exp(seq(log(rmin),log(rmax),length.out=nbins))#
+ir <- cut(rlo, logbins, right=TRUE)#
+#
+# Make data frame#
+df <- data.frame(ir=ir, rlo=rlo, rhi=rhi, dd=dd)#
+xi <- na.omit(ddply(df, .(ir), summarise, rmin=min(rlo), rmax=max(rhi), ddsum=sum(dd)))#
+xi$rrsum <- (4*pi/3)*((xi$rmax^3) - (xi$rmin^3))*density*norm#
+xi$xi <- xi$ddsum/xi$rrsum - 1#
+xi$r0 <- sqrt(xi$rmin*xi$rmax)
+g4b=xi
+dfile = '../data/gals4'#
+pp <- ReadPairs(paste(dfile,"DD.dat",sep='-'))#
+norm <- ReadNorm(paste(dfile,"norm.dat",sep='-'))#
+Lbox <- 1000.0#
+density <- norm/(Lbox^3)#
+#
+dd <- colSums(pp$pairs)#
+rlo <- pp$rbins[-length(pp$rbins)]#
+rhi <- pp$rbins[-1]#
+#
+# These parameters define the logarithmic bins#
+rmin <- 0.3#
+rmax <- 200#
+nbins <- 200#
+logbins <- exp(seq(log(rmin),log(rmax),length.out=nbins))#
+ir <- cut(rlo, logbins, right=TRUE)#
+#
+# Make data frame#
+df <- data.frame(ir=ir, rlo=rlo, rhi=rhi, dd=dd)#
+xi <- na.omit(ddply(df, .(ir), summarise, rmin=min(rlo), rmax=max(rhi), ddsum=sum(dd)))#
+xi$rrsum <- (4*pi/3)*((xi$rmax^3) - (xi$rmin^3))*density*norm#
+xi$xi <- xi$ddsum/xi$rrsum - 1#
+xi$r0 <- sqrt(xi$rmin*xi$rmax)
+g4=xi
+gg <- ggplot(g4, aes(x=r0, y=xi))#
+gg <- gg + geom_point() +  geom_point(data = g2mil, aes(y = xi), colour = 'green', size = 2)#
+gg <- gg + geom_point() +  geom_point(data = g4b, aes(y = xi), colour = 'red', size = 2)#
+gg <- gg + geom_point()+scale_x_log10()+scale_y_log10()#
+gg <- gg + xlab("r (Mpc/h)")  + ylab(expression(xi(r)))#
+ggsave('../plots/gals4-xi.png', plot=gg)
