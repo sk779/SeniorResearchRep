@@ -6,7 +6,7 @@ import matplotlib.patches as mpatches
 
 hex_size = 1 # in Megaparsecs
 nmax = 5 # max gals per hex/fiber
-npts = 2000000 # number of points
+npts = 3845257 # number of points (3845257)
 
 in_file = '../data/gal_locs.npy'
 gals = np.load(in_file)
@@ -30,6 +30,7 @@ for i in range(npts):
 			valid[i] = 0
 	else:
 		dict[(q,r)] = [(x,y)]
+	if i%500000==0: print i
 
 gal_weights = np.ones(npts)
 for i in range(npts):
@@ -44,22 +45,22 @@ gals = np.insert(gals,5,gal_weights,1) # add gal weights as sixth column
 gals = gals[valid==np.ones(npts)]
 cols = np.array([1,2,3,5])
 gals = gals[:,cols]
-np.savetxt('../data/data_gals_2mil.txt',gals,delimiter=' ')
+np.savetxt('../data/data_gals_hs1.txt',gals,delimiter=' ')
 
 
 
 # to make unweighted
-file = '../data/data_gals4.txt'
+file = '../data/data_gals_hs1.txt'
 gals = np.loadtxt(file)
 gal_weights = np.ones(gals.shape[0])
 gals = np.insert(gals,4,gal_weights,1)
 cols = np.array([0,1,2,4])
 gals = gals[:,cols]
-np.savetxt('../data/data_gals4b.txt',gals,delimiter=' ')
+np.savetxt('../data/data_gals_hs1b.txt',gals,delimiter=' ')
 
 # scp bzg2@esca.astro.yale.edu:/home/bzg2/data/data_gals.txt .
 
-observed_gals = gals[valid==np.ones(npts)] # do before gals[:,cols]
-out_file = '../data/gal_locs_observed_' + str(npts/1000) + 'k.npy'
-np.save(out_file, observed_gals)
+# observed_gals = gals[valid==np.ones(npts)] # do before gals[:,cols]
+# out_file = '../data/gal_locs_observed_' + str(npts/1000) + 'k.npy'
+# np.save(out_file, observed_gals)
 
