@@ -15,9 +15,8 @@ from matplotlib import cm as CM
 
 # Global Variables/Initializations
 
+# Seed Initialization
 random.seed(1)
-
-counter = 0
 
 fig, ax = plt.subplots()
 patches = []
@@ -65,7 +64,7 @@ hex_num = 6
 n= 2*bound
 size=1
 
-# Determine hexagon vertices
+# Determine Hex Vertices
 
 for k in range(0,6):
     pts_list.append([(x + radius*math.cos((2*math.pi*(k+1))/6)),(y + radius*math.sin((2*math.pi*(k+1))/6))])
@@ -104,7 +103,6 @@ for r in range(-n,n):
 #                            patches.append(polygon)
                             if (i != 2 and i != 5):
                                 tri_list[i].append([q,r])
-                            counter = counter+1
 
 # Create consistent numbering scheme for hexagons within each wedge of focal plane
 
@@ -171,6 +169,7 @@ for j in range(0,hex_num):
         y_center = y + math.sqrt(3)*radius*j
         polygon = mpatches.RegularPolygon([x_center,y_center], 6, radius, (math.pi)/2, color='none', ec='black')
         patches.append(polygon)
+
 # Function that determines what big hex each point is in
 
 def convert(x_prime,y_prime):
@@ -200,6 +199,7 @@ i_loop = 0
 error_count = 0
 while (i_loop < pt_num):
     try:
+        # This distribution weights lower y values over higher oness
         if (i_loop < 8000):
             x_prime = random.uniform(15,130)
             x_prime_old = x_prime
@@ -223,8 +223,7 @@ while (i_loop < pt_num):
         error_count = error_count + 1
         continue
 
-# Calculate heat map values
-
+# Takes care of some errors w/ dictionary keys
 dict_sum = 0
 dict_j = 0
 while (dict_j < hex_num):
@@ -242,14 +241,15 @@ while (dict_j < hex_num):
 print "Total points captured: ", dict_sum
 print "Error Count: ", error_count
 
+# Table of values in each big hex
 prob_sum = 0
 for dict_j in range(0,hex_num):
     for dict_i in range(0,hex_num):
         prob_sum = prob_sum + len(dict[(dict_j,dict_i)])/float(pt_num)
         print dict_j, " ", dict_i, " ",len(dict[dict_j, dict_i])," ",len(dict[(dict_j,dict_i)])/float(pt_num)
-
 print prob_sum
 
+# Input values into heatmap
 x_list = []
 y_list = []
 val_list = []
@@ -273,27 +273,3 @@ plt.axis([0, 150, 0, 155])
 cb = plt.colorbar()
 cb.set_label('mean value')
 plt.show()
-
-# Plotting
-
-#plt.axes().set_aspect('equal', 'datalim')
-#collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3, match_original=True)
-#ax.add_collection(collection)
-#plt.axis([0,bound+5,0,bound+5])
-#plt.show()
-
-# Conversion Code:
-#q,r = crt2ax(x_prime,y_prime,size)
-#hex_center = drawConvert(q,r,size)
-#polygon = mpatches.RegularPolygon(hex_center, 6, size, color='black', ec='black')
-#patches.append(polygon)
-
-#def convert(x_prime,y_prime):
-#    for j in range(0,3):
-#        for i in range (0,3):
-#            if ((x_prime >= x+(radius*2*i)-radius) and (x_prime <= x+(radius*2*(i+1))-radius) and
-#                (y_prime >= y+(radius*math.sqrt(3)*j)-(math.sqrt(3)*radius/2)) and (y_prime <= y + (radius*math.sqrt(3)*(j+1))-(math.sqrt(3)*radius/2))):
-#                    print j,i
-#                    x_prime = x_prime - 2*radius*i
-#                    y_prime = y_prime - math.sqrt(3)*radius*j
-#                    return x_prime, y_prime, (j, i)
