@@ -56,7 +56,7 @@ gal_weights = np.ones(gals.shape[0])
 gals = np.insert(gals,4,gal_weights,1)
 cols = np.array([0,1,2,4])
 gals = gals[:,cols]
-np.savetxt('../data/data_gals_hs1b.txt',gals,delimiter=' ')
+np.savetxt('../data/data_gals_full.txt',gals,delimiter=' ')
 
 # scp bzg2@esca.astro.yale.edu:/home/bzg2/data/data_gals.txt .
 
