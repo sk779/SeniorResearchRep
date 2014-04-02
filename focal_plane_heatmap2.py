@@ -267,20 +267,20 @@ gridsize = 10
 # 'C' is optional--it maps values to x-y coordinates; if 'C' is None (default) then
 # the result is a pure 2D histogram
 
-plt.hexbin(x_list, y_list, C=val_list, gridsize=gridsize, cmap=CM.jet, bins=None)
-plt.axis([0, 150, 0, 155])
+# plt.hexbin(x_list, y_list, C=val_list, gridsize=gridsize, cmap=CM.jet, bins=None)
+# plt.axis([0, 150, 0, 155])
 
-cb = plt.colorbar()
-cb.set_label('mean value')
-plt.show()
+# cb = plt.colorbar()
+# cb.set_label('mean value')
+# plt.show()
 
 # Plotting
 
-#plt.axes().set_aspect('equal', 'datalim')
-#collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3, match_original=True)
-#ax.add_collection(collection)
-#plt.axis([0,bound+5,0,bound+5])
-#plt.show()
+plt.axes().set_aspect('equal', 'datalim')
+collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3, match_original=True)
+ax.add_collection(collection)
+plt.axis([0,bound+5,0,bound+5])
+plt.show()
 
 # Conversion Code:
 #q,r = crt2ax(x_prime,y_prime,size)
