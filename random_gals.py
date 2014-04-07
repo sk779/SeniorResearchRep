@@ -6,7 +6,7 @@ def getBox(x,y,z,scale):
 	return(box)
 
 bound = 1000
-npts = 1000000
+npts = 2000000
 gals = np.zeros([npts,5])
 for i in range(npts):
 	x = np.random.uniform(0,bound)

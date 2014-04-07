@@ -28,7 +28,7 @@ ReadNorm <- function(fn) {
 # Here, we assume that this is generated assuming purely periodic boundary conditions
 # Therefore RR is completely isotropic and can be analytically estimated. 
 setwd('/Users/Ben/Documents/Yale/Senior Year/Spring 2014/Physics 472 Independent Projects in Physics/SeniorResearchRep')
-dfile = '../data/gals3'
+dfile = '../data/gals328b'
 pp <- ReadPairs(paste(dfile,"DD.dat",sep='-'))
 norm <- ReadNorm(paste(dfile,"norm.dat",sep='-'))
 Lbox <- 1000.0
@@ -53,19 +53,19 @@ xi$xi <- xi$ddsum/xi$rrsum - 1
 xi$r0 <- sqrt(xi$rmin*xi$rmax)
 
 
-# set xi to appropriate variable
-gg <- ggplot(upw, aes(x=r0, y=xi))
-gg <- gg + geom_point() +  geom_point(data = dat, aes(y = xi), colour = 'green', size = 2)
+# set xi to appropriate variable: dat, upw, nupw = xi
+gg <- ggplot(dat, aes(x=r0, y=xi))
+gg <- gg + geom_point() +  geom_point(data = upw, aes(y = xi), colour = 'green', size = 2)
 gg <- gg + geom_point() +  geom_point(data = nupw, aes(y = xi), colour = 'red', size = 2)
 gg <- gg + geom_point()+scale_x_log10()+scale_y_log10()
 gg <- gg + xlab("r (Mpc/h)")  + ylab(expression(xi(r)))
-#ggsave('../plots/gals4-xi.png', plot=gg)
+ggsave('../plots/gals_328-xi.png', plot=gg)
 
 # ratios
-rdf=data.frame(r0=g4$r0,bl=dat$xi/dat$xi,comp1=upw$xi/dat$xi,comp2=nupw$xi/dat$xi)
+rdf=data.frame(r0=upw$r0,bl=dat$xi/dat$xi,comp1=upw$xi/dat$xi,comp2=nupw$xi/dat$xi)
 gg <- ggplot(rdf, aes(x=r0, y=bl))
 gg <- gg + geom_point() +  geom_point(data=rdf, aes(y = comp1), colour = 'green', size = 2)
 gg <- gg + geom_point() +  geom_point(data=rdf, aes(y = comp2), colour = 'red', size = 2)
 gg <- gg + xlab("r (Mpc/h)")  + ylab("Observed over Simulated Ratio")
-ggsave('../plots/gals3-ratios.png', plot=gg)
+ggsave('../plots/gals_328-ratios.png', plot=gg)
 

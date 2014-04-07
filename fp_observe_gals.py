@@ -82,6 +82,7 @@ gals = gals[:,cols]
 np.savetxt('../data/data_gals_328b.txt',gals,delimiter=' ')
 
 # scp bzg2@esca.astro.yale.edu:/home/bzg2/data/data_gals.txt .
+# scp bzg2@omega.hpc.yale.edu:/home/fas/padmanabhan/bzg2/scratch/senior_thesis/data/gals328* .
 
 # observed_gals = gals[valid==np.ones(npts)] # do before gals[:,cols]
 # out_file = '../data/gal_locs_observed_' + str(npts/1000) + 'k.npy'
