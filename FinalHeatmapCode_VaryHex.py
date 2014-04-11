@@ -97,8 +97,8 @@ plt.scatter(x_list, y_list, c=val_list, s=50)
 plt.xlim(0, bound)
 plt.ylim(0, bound)
 cb = plt.colorbar()
-cb.set_label('mean value')
-plt.show()
+cb.set_label('capture value')
+# plt.show()
 
 # Table of values in each big hex
 print "Points in range: ", dict_sum

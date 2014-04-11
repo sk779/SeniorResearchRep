@@ -55,12 +55,12 @@ ops = {"<=": operator.le, ">=": operator.ge}
 #y = input('y center: ')
 #pt_num = input('# rand pts to test: ')
 
-bound = 200
+bound = 20
 radius = 10
-x = 25
-y = 25
-pt_num = 10000
-hex_num = 6
+x = 10.1
+y = 10.1
+pt_num = 10
+hex_num = 1
 
 n= 2*bound
 size=1
@@ -100,8 +100,8 @@ for r in range(-n,n):
                     if (ops[slopeleft_ineq[i]](hex_center[1],slope_left[i]*(hex_center[0]-x)+y) and
                         ops[slopebottom_ineq[i]](hex_center[1],slope_bottom[i]*(hex_center[0]-pts_list[i][0])+pts_list[i][1]) and
                         ops[sloperight_ineq[i]](hex_center[1],slope_right[i]*(hex_center[0]-x)+y)):
-#                            polygon = mpatches.RegularPolygon(hex_center, 6, size, color=color_list[i], ec='black')
-#                            patches.append(polygon)
+                            polygon = mpatches.RegularPolygon(hex_center, 6, size, color=color_list[i], ec='black')
+                            patches.append(polygon)
                             if (i != 2 and i != 5):
                                 tri_list[i].append([q,r])
                             counter = counter+1
@@ -153,7 +153,7 @@ for i in range(0,tri_list4_diff+1):
 
 # Function that maps cartesian to focal plane coordinates
 
-def focal_coord(x_prime,y_prime):
+def focal_coord(x_prime,y_prime,x,y,size):
     q,r = crt2ax(x_prime,y_prime,size)
     hex_center = drawConvert(q,r,size)
     for i in range(0,6):
@@ -194,6 +194,12 @@ def convert(x_prime,y_prime):
                 print x_prime, y_prime, (j, i)
                 return x_prime, y_prime, (j, i)
 
+def backtrack(orig_x_prime, orig_y_prime,j,i):
+    ref_x_prime = orig_x_prime-(radius*2*i)
+    ref_y_prime = orig_y_prime-(radius*math.sqrt(3)*j)
+
+
+
 # Input random points to test
 
 i_loop = 0
@@ -211,7 +217,7 @@ while (i_loop < pt_num):
             y_prime = random.uniform(80,130)
             y_prime_old = y_prime
         x_prime, y_prime, plane_number = convert(x_prime,y_prime)
-#        focal_coord(x_prime,y_prime)
+        focal_coord(x_prime,y_prime,x,y,size)
         if plane_number in dict.keys():
             dict[plane_number].append([(x_prime_old,y_prime_old),(x_prime,y_prime)])
         else:

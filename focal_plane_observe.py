@@ -43,15 +43,15 @@ def crt2ax(x,y,size):
 ops = {"<=": operator.le, ">=": operator.ge}
 
 
-bound = 200
+bound = 100
 hex_num = 6
 
 n= 2*bound
 size=1
 
-fp_radius = 100
-fp_x = 100
-fp_y = 100
+radius = 10
+x = 25
+y = 25
 
 
 # Determine Hex Vertices
@@ -137,8 +137,6 @@ for i in range(0,tri_list4_diff+1):
         l = l + 1
         tri_list[5].append([q,r])
 
-
-
 # Function that maps cartesian to focal plane coordinates
 def focal_coord(x_prime,y_prime):
     q,r = crt2ax(x_prime,y_prime,size)
@@ -174,4 +172,9 @@ def convert(x_prime,y_prime):
                 # print x_prime, y_prime, (j, i)
                 return x_prime, y_prime, (j, i)
 
+plt.axes().set_aspect('equal', 'datalim')
+collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3, match_original=True)
+ax.add_collection(collection)
+plt.axis([-50,100,-50,100])
+plt.show()
 
