@@ -36,7 +36,7 @@ def hexRound(x,y,z):
 
 # convert from cube to axial coordinates
 def cb2ax(x,y,z):
-	q  =  x
+	q = x
 	r = z
 	return q, r
 
