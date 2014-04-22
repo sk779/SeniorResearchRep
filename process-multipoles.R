@@ -62,11 +62,12 @@ norm <- ReadNorm(paste(dfile,"norm.dat",sep='-'))
 
 xi2d = Compute2DXi(pp,pq,qq,norm)
 dat = ComputeMultipoles(xi2d)
+dat = dat[1:125,]
 
 # plotting 
-gg <- ggplot(dat, aes(x=r0, y=xi0))
-gg <- gg + geom_point() + geom_point(data = dat, aes(y = xi2), colour = 'blue', size = 2)
-gg <- gg + geom_point() + geom_point(data = dat, aes(y = xi4), colour = 'red', size = 2)
-gg <- gg + geom_point() + scale_x_log10() + scale_y_log10()
+gg <- ggplot(dat, aes(x=r0, y=abs(dat$r0^2*xi0)))
+gg <- gg + geom_point() + geom_point(data = dat, aes(y = abs(dat$r0^2*xi2)), colour = 'blue', size = 2)
+gg <- gg + geom_point() + geom_point(data = dat, aes(y = abs(dat$r0^2*xi4)), colour = 'red', size = 2)
+gg <- gg + geom_point()# + scale_x_log10() + scale_y_log10()
 gg <- gg + xlab("r (Mpc/h)")  + ylab(expression(xi(r)))
 # ggsave('../plots/_gals_2mil_nm4-xi.png', plot=gg)

@@ -60,9 +60,10 @@ xi$r0 <- sqrt(xi$rmin*xi$rmax)
 
 
 # set xi to appropriate variable: dat, upw, nupw = xi
-gg <- ggplot(dat, aes(x=r0, y=xi))
-gg <- gg + geom_point() + geom_point(data = upw, aes(y = xi), colour = 'blue', size = 2)
-gg <- gg + geom_point() + geom_point(data = nupw, aes(y = xi), colour = 'red', size = 2)
+gg <- ggplot(dat, aes(x=r0, y=xi)) + geom_text(aes(x=100,y=2.6,label='Data'),colour='black',size=7)
+gg <- gg + geom_point() + geom_point(data = upw, aes(y = xi), colour = 'blue', size = 2) + geom_text(aes(x=100,y=1.5,label='Upweighting'),colour='blue',size=7)
+gg <- gg + geom_point() + geom_point(data = nupw, aes(y = xi), colour = 'red', size = 2) + geom_text(aes(x=100,y=.8,label='With Randoms'),colour='red',size=7)
 gg <- gg + geom_point() + scale_x_log10() + scale_y_log10()
+gg <- gg + annotate('text',x=1.9,y=.03,label='2 million points\nnmax=4\nhex_size=2Mpc')
 gg <- gg + xlab("r (Mpc/h)")  + ylab(expression(xi(r)))
-# ggsave('../plots/gals_2mil_nm4-xi.png', plot=gg)
+# ggsave('../plots/gals_2mil_nm4_rand-weighting-comp.png', plot=gg)
