@@ -48,23 +48,29 @@ def square_convert(x_prime, y_prime,x_start,y_start,sq_size,lim):
 
 # Main
 
-# x = 70.1 # starting x
-# y = 70.1 # starting y
-# grid_lim = 5 # number of x/y bins in heatmap
-# radius = 70 # focal plane radius (70 for 5000)
-# size = 1 # fiber size (1 for 5000)
-# pt_num = 10000 # number of points (galaxies) to test
-# hex_num = 2 # number of focal plane iterations across heatmap
-# bound = 300 # bound of x/y canvas
-
-x = 10.1 # starting x
-y = 10.1 # starting y
-grid_lim = 25 # number of x/y bins in heatmap
-radius = 10 # focal plane radius (70 for 5000)
-size = 1 # fiber size (1 for 5000)
+fig, ax = plt.subplots()
+radius = 1.49270533036  # focal plane radius (70 for 5000)
+x = radius + 1 # starting x
+y = radius + 1 # starting y
+grid_lim = 4 # number of x/y bins in heatmap
+size = 0.02015 # fiber size (1 for 5000)
 pt_num = 1000 # number of points (galaxies) to test
-hex_num = 2 # number of focal plane iterations across heatmap
-bound = 50 # bound of x/y canvas
+hex_num = 3 # number of focal plane iterations across heatmap
+graph_bound = 100
+bound = 200 # bound of x/y canvas
+
+
+# fig, ax = plt.subplots()
+# patches = []
+# x = 10.1 # starting x
+# y = 10.1 # starting y
+# grid_lim = 10 # number of x/y bins in heatmap
+# radius = 10 # focal plane radius (70 for 5000)
+# size = 1 # fiber size (1 for 5000)
+# pt_num = 200 # number of points (galaxies) to test
+# hex_num = 5 # number of focal plane iterations across heatmap
+# graph_bound = 60
+# bound = 100 # bound of x/y canvas
 
 i_loop = 0
 error_count = 0
@@ -75,13 +81,17 @@ patches = []
 
 dict = {}
 tri_dict = {}
+all_pt_list = []
 
 # Establish fiber order/location for each focal plane position
+
 for j in range(0,hex_num):
     for i in range(0, hex_num):
         print j,i
-    	new_x = x + 2*radius*i
-    	new_y = y + math.sqrt(3)*radius*j
+        new_x = x + (2*radius*i)
+        new_y = y + (math.sqrt(3)*radius*j)
+        polygon = mpatches.RegularPolygon([new_x,new_y], 6, radius, (math.pi)/2, linewidth=1,color='none', ec='black')
+        patches.append(polygon)
         tri_dict[(j,i)] = []
         tri_dict[(j,i)].append(dynamic_tri_list(new_x, new_y, radius, bound, size))
         # if (j,i) in tri_dict.keys():
@@ -99,7 +109,8 @@ for j in range(0,hex_num):
 # Run points to determine where they fall in focal plane positions
 while (i_loop < pt_num):
     try:
-        x_prime_old, y_prime_old = random.uniform(0,bound), random.uniform(0,bound)
+        x_prime_old, y_prime_old = random.uniform(0,graph_bound), random.uniform(0,graph_bound)
+        all_pt_list.append([x_prime_old,y_prime_old])
         x_prime, y_prime, plane_number = convert(x_prime_old,y_prime_old,radius,x,y)
         new_x = x + 2*radius*plane_number[1]
         new_y = y + math.sqrt(3)*radius*plane_number[0]
@@ -119,6 +130,7 @@ while (i_loop < pt_num):
         i_loop = i_loop + 1
     except (ValueError,TypeError):
         # plt.scatter(x_prime_old, y_prime_old, color = 'green')
+        all_pt_list.append([x_prime_old,y_prime_old])
         i_loop = i_loop + 1
         error_count = error_count + 1
         continue
@@ -127,6 +139,9 @@ while (i_loop < pt_num):
 # print dict.keys()
 
 square_dict = {}
+total_square_dict = {}
+
+# print all_pt_list
 
 val_list = list(dict.values())
 # print val_list
@@ -143,11 +158,20 @@ y_list = tuple(x[1] for x in val_list)
 for i in range(0,len(x_list)):
     if (i % 10 == 0):
         print i   
-    square_number = square_convert(x_list[i],y_list[i],0,0,(bound/grid_lim),grid_lim)
+    square_number = square_convert(x_list[i],y_list[i],0,0,(graph_bound/grid_lim),grid_lim)
     if square_number in square_dict.keys():
         square_dict[square_number].append([(x_list[i],y_list[i])])
     else:
         square_dict[square_number] = [(x_list[i],y_list[i])]
+
+for i in range(0,pt_num):
+    if (i % 10 == 0):
+        print i   
+    square_number = square_convert(all_pt_list[i][0],all_pt_list[i][1],0,0,(graph_bound/grid_lim),grid_lim)
+    if square_number in total_square_dict.keys():
+        total_square_dict[square_number].append([(all_pt_list[i][0],all_pt_list[i][1])])
+    else:
+        total_square_dict[square_number] = [(all_pt_list[i][0],all_pt_list[i][1])]
 
 # print square_dict
 
@@ -159,34 +183,83 @@ while (i_dict < grid_lim):
     while (j_dict < grid_lim):
         try:
             dict_sum = dict_sum + len(square_dict[i_dict, j_dict]);
+            dict_sum = dict_sum + len(total_square_dict[i_dict, j_dict]);
             j_dict = j_dict + 1
         except (KeyError):
             square_dict[(i_dict,j_dict)] = []
+            total_square_dict[(i_dict,j_dict)] = []
             j_dict = j_dict + 1
     i_dict = i_dict+1
+
+# print square_dict
+# print total_square_dict
 
 # Heatmap Plotting
 x_list2 = []
 y_list2 = []
 val_list2 = []
-for j in range(0,grid_lim):
-    for i in range(0, grid_lim):
-        x_list2.append((bound/grid_lim)*i+.5*(bound/grid_lim))
-        y_list2.append((bound/grid_lim)*j+.5*(bound/grid_lim))
-        val_list2.append(len(square_dict[(i,j)]))
+capture_list = []
+
+j_stuff = 0
+while (j_stuff < grid_lim):
+    if (j_stuff % 50):
+        print j_stuff
+    i_stuff = 0
+    while (i_stuff < grid_lim): 
+        try:
+            x_list2.append((graph_bound/grid_lim)*i_stuff+.5*(graph_bound/grid_lim))
+            y_list2.append((graph_bound/grid_lim)*j_stuff+.5*(graph_bound/grid_lim))
+            val_list2.append(len(square_dict[(i_stuff,j_stuff)]))
+            q = float(len(square_dict[(i_stuff,j_stuff)]))
+            r = float(len(total_square_dict[(i_stuff,j_stuff)]))
+            # print q, "AHH"
+            # print r
+            # print q/r, "BAH"
+            capture_list.append(q/r)
+            i_stuff = i_stuff +1
+        except (ZeroDivisionError):
+            capture_list.append(0)
+            i_stuff = i_stuff +1
+    j_stuff = j_stuff + 1
+
+print x_list2
+# print "CAP LIST", capture_list
+# print "VAL", val_list2
+
+# for j in range(0,grid_lim):
+#     for i in range(0, grid_lim):
+#         x_list2.append((bound/grid_lim)*i+.5*(bound/grid_lim))
+#         y_list2.append((bound/grid_lim)*j+.5*(bound/grid_lim))
+#         val_list2.append(len(square_dict[(i,j)]))
+#         print len(square_dict[(i,j)])
+#         print len(total_square_dict[(i,j)])
+#         capture_list.append(len(square_dict[(i,j)])/len(total_square_dict[(i,j)]))
 
 # Table of values in each heatmap position
 print "Points in range: ", dict_sum
 print "Points out of range: ", error_count
 prob_sum = 0
-for j_dict in range(0,grid_lim):
-    for i_dict in range(0,grid_lim):
-        prob_sum = prob_sum + len(square_dict[(i_dict,j_dict)])/float(pt_num)
-        print i_dict, " ", j_dict, " ",len(square_dict[i_dict, j_dict])," ",len(square_dict[(i_dict,j_dict)])/float(pt_num)
+for j_dict_2 in range(0,grid_lim):
+    for i_dict_2 in range(0,grid_lim):
+        prob_sum = prob_sum + len(square_dict[(i_dict_2,j_dict_2)])/float(pt_num)
+        # print i_dict, " ", j_dict, " ",len(square_dict[i_dict, j_dict])," ",len(square_dict[(i_dict,j_dict)])/float(pt_num)
 
-plt.scatter(x_list2, y_list2, c=val_list2, s=50, marker=(4, 0, 45))
-plt.xlim(0, bound)
-plt.ylim(0, bound)
+# plt.axes().set_aspect('equal')
+# plt.scatter(x_list2, y_list2, c=val_list2, s=500, marker=(4, 0, 45))
+# plt.xlim(0, graph_bound)
+# plt.ylim(0, graph_bound)
+# cb = plt.colorbar()
+# cb.set_label('capture value')
+# collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3, match_original=True)
+# ax.add_collection(collection)
+# plt.show()
+
+plt.axes().set_aspect('equal')
+plt.scatter(x_list2, y_list2, c=capture_list, s=500, marker=(4, 0, 45))
+plt.xlim(0, graph_bound)
+plt.ylim(0, graph_bound)
 cb = plt.colorbar()
 cb.set_label('capture value')
+collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3, match_original=True)
+ax.add_collection(collection)
 plt.show()

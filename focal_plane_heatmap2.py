@@ -55,15 +55,32 @@ ops = {"<=": operator.le, ">=": operator.ge}
 #y = input('y center: ')
 #pt_num = input('# rand pts to test: ')
 
-bound = 20
-radius = 10
-x = 10.1
-y = 10.1
-pt_num = 10
-hex_num = 1
+# bound = 300
+# radius = 100
+# x = 150
+# y = 150
+# pt_num = 10
+# hex_num = 1
+# size=10
+
+
+# radius = 1.49270533036  # focal plane radius (70 for 5000)
+# x = radius + 0.000001 # starting x
+# y = radius + 0.000001 # starting y
+# size = 0.02015 # fiber size (1 for 5000)
+# pt_num = 10 # number of points (galaxies) to test
+# hex_num = 2 # number of focal plane iterations across heatmap
+# bound = 50 # bound of x/y canvas
+
+radius = 10 # focal plane radius (70 for 5000)
+x = 10.1 # starting x
+y = 10.1 # starting y
+size = 1 # fiber size (1 for 5000)
+pt_num = 10 # number of points (galaxies) to test
+hex_num = 2 # number of focal plane iterations across heatmap
+bound = 100 # bound of x/y canvas
 
 n= 2*bound
-size=1
 
 # Determine hexagon vertices
 
@@ -167,10 +184,10 @@ def focal_coord(x_prime,y_prime,x,y,size):
 
 for j in range(0,hex_num):
     for i in range (0,hex_num):
-        x_center = x + 2*radius*i
-        y_center = y + math.sqrt(3)*radius*j
-        polygon = mpatches.RegularPolygon([x_center,y_center], 6, radius, (math.pi)/2, color='none', ec='black')
-        patches.append(polygon)
+            x_center = x + 2*radius*i
+            y_center = y + math.sqrt(3)*radius*j
+            polygon = mpatches.RegularPolygon([x_center,y_center], 6, radius, (math.pi)/2, color='none', ec='black')
+            patches.append(polygon)
 # Function that determines what big hex each point is in
 
 def convert(x_prime,y_prime):
@@ -281,6 +298,20 @@ gridsize = 10
 # plt.show()
 
 # Plotting
+
+print counter
+
+hex_center = drawConvert(0,0,size)
+polygon = mpatches.RegularPolygon(hex_center, 6, size, color='black', ec='black')
+patches.append(polygon)
+
+hex_center = drawConvert(0,1,size)
+polygon = mpatches.RegularPolygon(hex_center, 6, size, color='blue', ec='black')
+patches.append(polygon)
+
+hex_center = drawConvert(1,0,size)
+polygon = mpatches.RegularPolygon(hex_center, 6, size, color='yellow', ec='black')
+patches.append(polygon)
 
 plt.axes().set_aspect('equal', 'datalim')
 collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3, match_original=True)
