@@ -8,7 +8,7 @@ hex_size = 2 # in Megaparsecs
 nmax = 4 # max gals per hex/fiber
 npts = 2000000 # number of points (3845257)
 
-in_file = '../data/gal_locs.npy'
+in_file = '../data/gal_locs_vz.npy'
 gals = np.load(in_file)
 gals = gals[0:npts]
 
@@ -56,7 +56,7 @@ gal_weights = np.ones(gals.shape[0])
 gals = np.insert(gals,4,gal_weights,1)
 cols = np.array([0,1,2,4])
 gals = gals[:,cols]
-np.savetxt('../data/data_gals_1mil_nm4_upweight_test_randsb.txt',gals,delimiter=' ')
+np.savetxt('../data/data_gals_vz_correction_2mil.txt',gals,delimiter=' ')
 
 # scp bzg2@esca.astro.yale.edu:/home/bzg2/data/data_gals.txt .
 # scp bzg2@omega.hpc.yale.edu:/home/fas/padmanabhan/bzg2/scratch/senior_thesis/data/gals328* .

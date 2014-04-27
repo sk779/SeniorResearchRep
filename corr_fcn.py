@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pylab as py
-from boxes_test import isValidBox
+# from boxes_test import isValidBox
 
 def dist(pi,pj):
 	# gali = gals[i]
