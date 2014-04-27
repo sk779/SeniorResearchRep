@@ -1,7 +1,7 @@
 import random
 import numpy as np
 from hex_coordinates import *
-from MapFunctions import *
+from MapFunctions2 import *
 import matplotlib.pyplot as plt; plt.rcdefaults()
 import matplotlib.patches as mpatches
 from matplotlib.collections import PatchCollection
@@ -17,26 +17,30 @@ from matplotlib import cm as CM
 # Main
 
 radius = 1.49270533036  # focal plane radius (70 for 5000)
-x = radius + .1 # starting x
-y = radius + .1 # starting y
+x = radius+.1  # starting x
+y = radius+.1 # starting y
 grid_lim = 100 # number of x/y bins in heatmap
 size = 0.02015 # fiber size (1 for 5000)
-pt_num = 10000 # number of points (galaxies) to test
-hex_num = 4 # number of focal plane iterations across heatmap
-graph_bound = 10.0 # range of graph
+pt_num = 100 # number of points (galaxies) to test
+hex_num = 10 # number of focal plane iterations across heatmap
+x_hex_num = 17
+y_hex_num = 19
+graph_bound = 25.0 # range of graph
 bound = 200 # fix at 200
+
+readdata = np.genfromtxt('/Users/shibikannan/Desktop/SeniorResearch/galaxyhex.csv', delimiter = ',')
 
 fig, ax = plt.subplots()
 i_loop = 0
 error_count = 0
 random.seed(5)
-big_tri_list = [[] for i in range(hex_num)]
 patches = []
 dict = {}
 tri_dict = {}
 square_dict = {}
 total_square_dict = {}
 all_pt_list = []
+error_list = []
 
 # Establish fiber order/location for each focal plane position
 
@@ -46,69 +50,57 @@ r_start = q_r_stuff[1]
 q_diff = q_r_stuff[2] - q_r_stuff[0]
 r_diff = q_r_stuff[3] - q_r_stuff[1]
 
-for j in range(0,hex_num):
-    for i in range(0, hex_num):
+
+for j in range(0,y_hex_num):
+    for i in range(0, x_hex_num):
         print j,i
-        new_x = x + (2*radius*i)
-        new_y = y + (math.sqrt(3)*radius*j)
-        q_min = (q_start + (q_diff*i)) - 20 - (.5*q_diff*j)
-        q_max = (q_start + (q_diff*(i+1))) + 20 - (.5*q_diff*j)
-        r_min = r_start + (r_diff*j) - 20
-        r_max = r_start + (r_diff*(j+1)) + 20
+        new_x = x + ((2*radius*i))/2
+        new_y = y + ((math.sqrt(3)*radius*j))/2
+        q_min = (q_start + (q_diff*i)/2) - 50 - (.5*q_diff*j)/2
+        q_max = (q_start + (q_diff*(i+1))/2) + 50 - (.5*q_diff*j)/2
+        r_min = r_start + (r_diff*j)/2 - 50
+        r_max = r_start + (r_diff*(j+1))/2 + 50
         print q_min, q_max, r_min, r_max
         polygon = mpatches.RegularPolygon([new_x,new_y], 6, radius, (math.pi)/2, linewidth=1,color='none', ec='black')
         patches.append(polygon)
         tri_dict[(j,i)] = []
         tri_dict[(j,i)].append(dynamic_tri_list2(new_x, new_y, radius, q_min, q_max, r_min,r_max, size))
 
-# for j in range(0,hex_num):
-#     for i in range(0, 2*hex_num):
-#         print j,i
-#         new_x = x + ((2*radius*i))/2
-#         new_y = y + (math.sqrt(3)*radius*j)
-#         q_min = (q_start + (q_diff*i)/2) - 20 - (.5*q_diff*j)
-#         q_max = (q_start + (q_diff*(i+1))/2) + 20 - (.5*q_diff*j)
-#         r_min = r_start + (r_diff*j) - 20
-#         r_max = r_start + (r_diff*(j+1)) + 20
-#         print q_min, q_max, r_min, r_max
-#         polygon = mpatches.RegularPolygon([new_x,new_y], 6, radius, (math.pi)/2, linewidth=1,color='none', ec='black')
-#         patches.append(polygon)
-#         tri_dict[(j,i)] = []
-#         tri_dict[(j,i)].append(dynamic_tri_list2(new_x, new_y, radius, q_min, q_max, r_min,r_max, size))
-
-
 # Run points to determine where they fall in focal plane positions
 while (i_loop < pt_num):
     try:
-        x_prime_old, y_prime_old = random.uniform(0,graph_bound), random.uniform(0,graph_bound)
-        # x_prime_old, y_prime_old = 3.01,3.11
-        x_prime, y_prime, plane_number = convert2(x_prime_old,y_prime_old,radius,x,y,hex_num)
-        new_x = x + 2*radius*plane_number[1]
-        new_y = y + math.sqrt(3)*radius*plane_number[0]
+        x_prime_old, y_prime_old, z_prime_old = readdata[i_loop][4], readdata[i_loop][5], readdata[i_loop][6]
+        x_prime_old, y_prime_old, z_prime_old = .025*x_prime_old, .025*y_prime_old, .025*z_prime_old
+        x_prime, y_prime, plane_number = convert2(x_prime_old,y_prime_old,radius,x,y,x_hex_num,y_hex_num)
+        new_x = x + (2*radius*plane_number[1])/2
+        new_y = y + (math.sqrt(3)*radius*plane_number[0])/2
         coord = new_focal_coord(x_prime,y_prime,radius,new_x,new_y,size,tri_dict[(plane_number[0],plane_number[1])])
         coord2 = coord[0], coord[1],plane_number[0],plane_number[1]
         if coord2 in dict.keys():
             if len(dict[coord2]) < 1:
-                dict[coord2].append((x_prime,y_prime))
+                dict[coord2].append((x_prime,y_prime, z_prime_old))
+            # dict[coord2].append((x_prime,y_prime))
         else:
-            dict[coord2] = [(x_prime,y_prime)]
+            dict[coord2] = [(x_prime,y_prime, z_prime_old)]
         if (i_loop % 1000 == 0):
             print i_loop    
         i_loop = i_loop + 1
-        all_pt_list.append([x_prime_old,y_prime_old])
-        print x_prime_old, y_prime_old
+        all_pt_list.append([x_prime_old,y_prime_old, z_prime_old])
     except (ValueError,TypeError):
-        all_pt_list.append([x_prime_old,y_prime_old])
+        all_pt_list.append([x_prime_old,y_prime_old,z_prime_old])
+        error_list.append([x_prime_old,y_prime_old,z_prime_old])
         i_loop = i_loop + 1
         error_count = error_count + 1
         continue
 
 all_pt_x = tuple(x[0] for x in all_pt_list)
 all_pt_y = tuple(x[1] for x in all_pt_list)
+all_pt_z = tuple(x[2] for x in all_pt_list)
 val_list = list(dict.values())
 val_list = [x for y in val_list for x in y]
 x_list = tuple(x[0] for x in val_list)
 y_list = tuple(x[1] for x in val_list)
+z_list = tuple(x[2] for x in val_list)
 
 # Heat map code
 
@@ -117,22 +109,22 @@ for i in range(0,len(x_list)):
         print i   
     square_number = square_convert2(x_list[i],y_list[i],0,0,float(graph_bound/grid_lim),grid_lim)
     if square_number in square_dict.keys():
-        square_dict[square_number].append([(x_list[i],y_list[i])])
+        square_dict[square_number].append([(x_list[i],y_list[i],z_list[i])])
     else:
-        square_dict[square_number] = [(x_list[i],y_list[i])]
+        square_dict[square_number] = [(x_list[i],y_list[i],z_list[i])]
 
 for i in range(0,len(all_pt_x)):
     if (i % 1000 == 0):
         print i   
     square_number = square_convert2(all_pt_x[i],all_pt_y[i],0,0,float(graph_bound/grid_lim),grid_lim)
     if square_number in total_square_dict.keys():
-        total_square_dict[square_number].append([(all_pt_list[i][0],all_pt_list[i][1])])
+        total_square_dict[square_number].append([(all_pt_list[i][0],all_pt_list[i][1],all_pt_list[i][2])])
     else:
-        total_square_dict[square_number] = [(all_pt_list[i][0],all_pt_list[i][1])]
+        total_square_dict[square_number] = [(all_pt_list[i][0],all_pt_list[i][1],all_pt_list[i][2])]
 
 # Takes care of heat map bins with no pts (small error correction)
 dict_sum = 0
-dict_sum2 = 0;
+dict_sum2 = 0
 i_dict = 0
 while (i_dict < grid_lim):
     j_dict = 0
@@ -176,6 +168,27 @@ while (j_stuff < grid_lim):
             i_stuff = i_stuff +1
     j_stuff = j_stuff + 1
 
+print val_list
+
+cap_val = []
+
+for i in range(0,len(val_list)):
+    x_val = x_list[i]
+    y_val = y_list[i]
+    z_val = z_list[i]
+    pos = square_convert2(x_val,y_val,0,0,float(graph_bound/grid_lim),grid_lim)
+    capv = len(square_dict[pos])/len(total_square_dict[pos])
+    cap_val.append(len(square_dict[pos])/len(total_square_dict[pos]))
+
+gals = np.ones((len(val_list),4)))
+gals[:,0] = np.array(x_list)
+gals[:,1] = np.array(y_list)
+gals[:,2] = np.array(z_list)
+gals[:,3] = np.array(cap_val)
+
+print gals
+
+
 # Table of values in each heatmap position
 print "Total points", dict_sum2
 print "Points captured: ", dict_sum
@@ -184,7 +197,6 @@ print "Points out of range: ", error_count
 # for j_dict_2 in range(0,grid_lim):
 #     for i_dict_2 in range(0,grid_lim):
 #         print i_dict_2, " ", j_dict_2, " ", (float(len(square_dict[(i_stuff,j_stuff)]))/float(len(total_square_dict[(i_stuff,j_stuff)])))*100
-
 
 plt.axes().set_aspect('equal')
 plt.scatter(x_list2, y_list2, c=capture_list, s=550, marker=(4, 0, 45))
@@ -196,5 +208,5 @@ collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3, match_original
 ax.add_collection(collection)
 plt.show()
 
-plt.hist(capture_list, range=[1, 100], bins=20)
+plt.hist(capture_list, range=[0, 100], bins=20)
 plt.show()

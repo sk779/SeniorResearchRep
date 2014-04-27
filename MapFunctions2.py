@@ -33,20 +33,22 @@ def convert(x_prime,y_prime,rad,x_start,y_start,hex_num):
                 # print (j,i)
                 return x_prime, y_prime, (j, i)
 
-def convert2(x_prime,y_prime,rad,x_start,y_start,hex_num):
+def convert2(x_prime,y_prime,rad,x_start,y_start,x_hex_num,y_hex_num):
 	x_start = x_start - rad
-	y_start = y_start - (math.sqrt(3)/2)*rad
+	y_start = y_start - (math.sqrt(3))*rad
 	i_pos = -1
 	j_pos = -1
-	for i in range(0,hex_num):
-		x_left = x_start + (2*rad*i)
-		x_right = x_start + (2*rad*(i+1))
+	for i in range(0,x_hex_num):
+		x_left = x_start + (2*rad*i)/2
+		x_right = x_start + (2*rad*(i+2))/2
+		# print x_prime, x_left, x_right
 		if ((x_prime > x_left) and (x_prime < x_right)):
 			i_pos = i
 			break
-	for j in range(0,hex_num):
-		y_left = y_start + (math.sqrt(3)*rad*j)
-		y_right = y_start + (math.sqrt(3)*rad*(j+1))
+	for j in range(0,y_hex_num):
+		y_left = y_start + (math.sqrt(3)*rad*(j+1))/2
+		y_right = y_start + (math.sqrt(3)*rad*(j+3))/2
+		# print y_prime, y_left,y_right
 		if ((y_prime > y_left) and (y_prime < y_right)):
 		    j_pos = j
 		    break

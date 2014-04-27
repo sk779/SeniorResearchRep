@@ -17,20 +17,21 @@ from matplotlib import cm as CM
 # Main
 
 radius = 1.49270533036  # focal plane radius (70 for 5000)
-x = radius + .1 # starting x
-y = radius + .1 # starting y
+x = radius+.1  # starting x
+y = radius+.1 # starting y
 grid_lim = 100 # number of x/y bins in heatmap
 size = 0.02015 # fiber size (1 for 5000)
-pt_num = 10000 # number of points (galaxies) to test
-hex_num = 4 # number of focal plane iterations across heatmap
-graph_bound = 10.0 # range of graph
+pt_num = 10 # number of points (galaxies) to test
+hex_num = 10 # number of focal plane iterations across heatmap
+x_hex_num = 2
+y_hex_num = 2
+graph_bound = 25.0 # range of graph
 bound = 200 # fix at 200
 
 fig, ax = plt.subplots()
 i_loop = 0
 error_count = 0
 random.seed(5)
-big_tri_list = [[] for i in range(hex_num)]
 patches = []
 dict = {}
 tri_dict = {}
@@ -46,49 +47,35 @@ r_start = q_r_stuff[1]
 q_diff = q_r_stuff[2] - q_r_stuff[0]
 r_diff = q_r_stuff[3] - q_r_stuff[1]
 
-for j in range(0,hex_num):
-    for i in range(0, hex_num):
+
+for j in range(0,y_hex_num):
+    for i in range(0, x_hex_num):
         print j,i
-        new_x = x + (2*radius*i)
-        new_y = y + (math.sqrt(3)*radius*j)
-        q_min = (q_start + (q_diff*i)) - 20 - (.5*q_diff*j)
-        q_max = (q_start + (q_diff*(i+1))) + 20 - (.5*q_diff*j)
-        r_min = r_start + (r_diff*j) - 20
-        r_max = r_start + (r_diff*(j+1)) + 20
+        new_x = x + ((2*radius*i))/2
+        new_y = y + ((math.sqrt(3)*radius*j))/2
+        q_min = (q_start + (q_diff*i)/2) - 50 - (.5*q_diff*j)/2
+        q_max = (q_start + (q_diff*(i+1))/2) + 50 - (.5*q_diff*j)/2
+        r_min = r_start + (r_diff*j)/2 - 50
+        r_max = r_start + (r_diff*(j+1))/2 + 50
         print q_min, q_max, r_min, r_max
         polygon = mpatches.RegularPolygon([new_x,new_y], 6, radius, (math.pi)/2, linewidth=1,color='none', ec='black')
         patches.append(polygon)
         tri_dict[(j,i)] = []
         tri_dict[(j,i)].append(dynamic_tri_list2(new_x, new_y, radius, q_min, q_max, r_min,r_max, size))
 
-# for j in range(0,hex_num):
-#     for i in range(0, 2*hex_num):
-#         print j,i
-#         new_x = x + ((2*radius*i))/2
-#         new_y = y + (math.sqrt(3)*radius*j)
-#         q_min = (q_start + (q_diff*i)/2) - 20 - (.5*q_diff*j)
-#         q_max = (q_start + (q_diff*(i+1))/2) + 20 - (.5*q_diff*j)
-#         r_min = r_start + (r_diff*j) - 20
-#         r_max = r_start + (r_diff*(j+1)) + 20
-#         print q_min, q_max, r_min, r_max
-#         polygon = mpatches.RegularPolygon([new_x,new_y], 6, radius, (math.pi)/2, linewidth=1,color='none', ec='black')
-#         patches.append(polygon)
-#         tri_dict[(j,i)] = []
-#         tri_dict[(j,i)].append(dynamic_tri_list2(new_x, new_y, radius, q_min, q_max, r_min,r_max, size))
-
-
 # Run points to determine where they fall in focal plane positions
 while (i_loop < pt_num):
     try:
-        x_prime_old, y_prime_old = random.uniform(0,graph_bound), random.uniform(0,graph_bound)
-        # x_prime_old, y_prime_old = 3.01,3.11
-        x_prime, y_prime, plane_number = convert2(x_prime_old,y_prime_old,radius,x,y,hex_num)
-        new_x = x + 2*radius*plane_number[1]
-        new_y = y + math.sqrt(3)*radius*plane_number[0]
+        # x_prime_old, y_prime_old = random.uniform(0,graph_bound), random.uniform(0,graph_bound)
+        x_prime_old, y_prime_old = 3.3,3.5
+        x_prime, y_prime, plane_number = convert2(x_prime_old,y_prime_old,radius,x,y,x_hex_num,y_hex_num)
+        new_x = x + (2*radius*plane_number[1])/2
+        new_y = y + (math.sqrt(3)*radius*plane_number[0])/2
         coord = new_focal_coord(x_prime,y_prime,radius,new_x,new_y,size,tri_dict[(plane_number[0],plane_number[1])])
         coord2 = coord[0], coord[1],plane_number[0],plane_number[1]
+        print coord2, "CHARU"
         if coord2 in dict.keys():
-            if len(dict[coord2]) < 1:
+            if len(dict[coord2]) < 2:
                 dict[coord2].append((x_prime,y_prime))
         else:
             dict[coord2] = [(x_prime,y_prime)]
@@ -96,7 +83,6 @@ while (i_loop < pt_num):
             print i_loop    
         i_loop = i_loop + 1
         all_pt_list.append([x_prime_old,y_prime_old])
-        print x_prime_old, y_prime_old
     except (ValueError,TypeError):
         all_pt_list.append([x_prime_old,y_prime_old])
         i_loop = i_loop + 1
@@ -196,5 +182,5 @@ collection = PatchCollection(patches, cmap=plt.cm.hsv, alpha=0.3, match_original
 ax.add_collection(collection)
 plt.show()
 
-plt.hist(capture_list, range=[1, 100], bins=20)
+plt.hist(capture_list, range=[0, 100], bins=20)
 plt.show()
